@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>self</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='8'%20fill='%2317191f'/%3E%3Crect%20x='10'%20y='10'%20width='44'%20height='44'%20rx='5'%20fill='%23f3efe7'%20opacity='0.08'/%3E%3Ctext%20x='32'%20y='40'%20text-anchor='middle'%20font-family='Arial,%20Helvetica,%20sans-serif'%20font-size='24'%20font-weight='700'%20fill='%23f3efe7'%3EIx%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../assets/report-workspace.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']],
+        processEscapes: true
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <script defer src="../assets/report-workspace.js"></script>
+</head>
+<body>
+  <header class="report-topbar">
+    <nav class="report-nav" aria-label="Page navigation">
+      <a class="brand-link project-index-link" href="../index.html" aria-label="Open Project Index">Project Index</a>
+    </nav>
+<div class="topbar-meta">
+      <span>Source</span>
+      <code>docs/skills/self.md</code>
+    </div>
+  </header>
+  <main class="report-layout">
+    <aside class="report-sidebar"><nav class="toc" aria-label="Table of contents"><a class="toc-link toc-level-2" href="#何时使用">何时使用</a>
+<a class="toc-link toc-level-2" href="#工作方式">工作方式</a>
+<a class="toc-link toc-level-2" href="#安全边界">安全边界</a>
+<a class="toc-link toc-level-2" href="#导航">导航</a></nav></aside>
+    <article class="report-article" data-source-path="docs/skills/self.md" data-page-role="subpage" data-page-id="docs/skills/self.html" data-workspace-id="skill-localhub">
+      <header class="article-header">
+        <h1>self</h1>
+        <p class="article-meta">Generated 2026-06-16 02:53 from Markdown.</p>
+      </header>
+
+      <div class="article-body"><p><code>self</code> 用于系统性复盘本地 Codex 历史、rollout、执行日志和桌面日志，从证据中提取可复用经验、用户工作偏好和未来行为规则，并按规范归档到飞书。</p>
+<table data-markdown-source="| 项 | 内容 |
+| --- | --- |
+| 类型 | 自我复盘 |
+| 原始 skill | `personal-agent-skills/skills/self/SKILL.md` |
+| 主要产出 | 中文复盘报告、证据范围说明、长期偏好/行为规则、飞书归档链接 |">
+<thead>
+<tr>
+<th>项</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>类型</td>
+<td>自我复盘</td>
+</tr>
+<tr>
+<td>原始 skill</td>
+<td><code>personal-agent-skills/skills/self/SKILL.md</code></td>
+</tr>
+<tr>
+<td>主要产出</td>
+<td>中文复盘报告、证据范围说明、长期偏好/行为规则、飞书归档链接</td>
+</tr>
+</tbody>
+</table>
+<h2 id="何时使用">何时使用</h2>
+<ul>
+<li>用户要求复盘 Codex 历史、总结个人工作风格、提炼长期行为规则或创建自我知识档案。</li>
+<li>需要从本地可访问的对话、日志和执行记录中寻找稳定模式。</li>
+<li>需要把结果发布到飞书指定层级。</li>
+</ul>
+<h2 id="工作方式">工作方式</h2>
+<ol type="1">
+<li>先定义范围和安全边界，把任务视为证据审查，而不是原始 transcript 导出。</li>
+<li>用 <code>collect_evidence.py</code> 生成本地证据清单。</li>
+<li>选择高价值线程和错误簇阅读，特别是用户纠正、重试、完成交付和工具失败。</li>
+<li>对每条执行教训记录错误做法、后果、正确做法和可复用规则。</li>
+<li>按显式指令、重复偏好、稳定 workflow、弱推断的优先级建立个人画像。</li>
+<li>按引用的报告结构写中文报告，并发布到飞书指定目录。</li>
+</ol>
+<h2 id="安全边界">安全边界</h2>
+<ul>
+<li>不打印或复制 credentials、tokens、cookies、SSH 私钥和认证文件内容。</li>
+<li>明确区分用户明确偏好、重复证据和推断。</li>
+<li>不仅凭日志错误推断用户不满。</li>
+<li>发布后要重新读取飞书页面并验证标题、章节和父级链路。</li>
+</ul>
+<h2 id="导航">导航</h2>
+<p>上一项：<a href="remote-server-workspace.html">remote-server-workspace</a> · <a href="../index.html">返回首页</a> · 下一项：<a href="hatch-pet.html">hatch-pet</a></p>
+
+
+      </div>
+</article>
+  </main>
+</body>
+</html>

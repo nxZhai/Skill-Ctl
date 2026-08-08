@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>hf-daily-paper-radar</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='8'%20fill='%2317191f'/%3E%3Crect%20x='10'%20y='10'%20width='44'%20height='44'%20rx='5'%20fill='%23f3efe7'%20opacity='0.08'/%3E%3Ctext%20x='32'%20y='40'%20text-anchor='middle'%20font-family='Arial,%20Helvetica,%20sans-serif'%20font-size='24'%20font-weight='700'%20fill='%23f3efe7'%3EIx%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../assets/report-workspace.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']],
+        processEscapes: true
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <script defer src="../assets/report-workspace.js"></script>
+</head>
+<body>
+  <header class="report-topbar">
+    <nav class="report-nav" aria-label="Page navigation">
+      <a class="brand-link project-index-link" href="../index.html" aria-label="Open Project Index">Project Index</a>
+    </nav>
+<div class="topbar-meta">
+      <span>Source</span>
+      <code>docs/skills/hf-daily-paper-radar.md</code>
+    </div>
+  </header>
+  <main class="report-layout">
+    <aside class="report-sidebar"><nav class="toc" aria-label="Table of contents"><a class="toc-link toc-level-2" href="#何时使用">何时使用</a>
+<a class="toc-link toc-level-2" href="#工作方式">工作方式</a>
+<a class="toc-link toc-level-2" href="#报告结构">报告结构</a>
+<a class="toc-link toc-level-2" href="#边界与注意">边界与注意</a>
+<a class="toc-link toc-level-2" href="#导航">导航</a></nav></aside>
+    <article class="report-article" data-source-path="docs/skills/hf-daily-paper-radar.md" data-page-role="subpage" data-page-id="docs/skills/hf-daily-paper-radar.html" data-workspace-id="skill-localhub">
+      <header class="article-header">
+        <h1>hf-daily-paper-radar</h1>
+        <p class="article-meta">Generated 2026-06-16 02:53 from Markdown.</p>
+      </header>
+
+      <div class="article-body"><p><code>hf-daily-paper-radar</code> 用于抓取 Hugging Face Daily Papers，按用户给出的研究兴趣排序、总结并保存本地 Markdown 报告。它把官方 Hugging Face 数据源作为论文列表的准确信源。</p>
+<table data-markdown-source="| 项 | 内容 |
+| --- | --- |
+| 类型 | 论文雷达 |
+| 原始 skill | `personal-agent-skills/skills/hf-daily-paper-radar/SKILL.md` |
+| 主要产出 | 当前目录下的 Markdown 论文雷达报告、趋势总结、推荐阅读顺序 |">
+<thead>
+<tr>
+<th>项</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>类型</td>
+<td>论文雷达</td>
+</tr>
+<tr>
+<td>原始 skill</td>
+<td><code>personal-agent-skills/skills/hf-daily-paper-radar/SKILL.md</code></td>
+</tr>
+<tr>
+<td>主要产出</td>
+<td>当前目录下的 Markdown 论文雷达报告、趋势总结、推荐阅读顺序</td>
+</tr>
+</tbody>
+</table>
+<h2 id="何时使用">何时使用</h2>
+<ul>
+<li>用户要求阅读、筛选、总结、优先级排序 Hugging Face Daily Papers。</li>
+<li>用户给定研究兴趣，例如 latent reasoning、on-policy distillation、agentic RL 或评测安全方向。</li>
+<li>用户说“未读 HF Daily Papers 邮件”时，也可以先用 Apple Mail 识别日期，再从官方 Hugging Face 源拉取论文。</li>
+</ul>
+<h2 id="工作方式">工作方式</h2>
+<ol type="1">
+<li>优先使用官方 <code>hf papers</code> CLI；不可用时使用 skill 自带 REST helper。</li>
+<li>解析日期：显式日期、today/yesterday、latest 或 last N issues 都要转成具体 issue。</li>
+<li>规范化论文数据，包括标题、摘要、upvotes、关键词、HF/arXiv/project/GitHub 链接和发布时间。</li>
+<li>按主兴趣、方法相关性、迁移价值、次级兴趣和 upvotes 进行综合排序。</li>
+<li>分组为 Direct Hits、Adjacent Methods、Agentic RL / Evaluation / Safety 和 Peripheral。</li>
+<li>保存中文 Markdown 报告，再询问是否发布到飞书。</li>
+</ol>
+<h2 id="报告结构">报告结构</h2>
+<p>报告应包含标题、来源日期、用户关注点、执行摘要、排序后的论文分析、方向级趋势和推荐阅读顺序。重点是趋势和方法启发，而不是机械复述摘要。</p>
+<h2 id="边界与注意">边界与注意</h2>
+<ul>
+<li>不默认安装或升级 Hugging Face 工具。</li>
+<li>不下载所有 PDF，除非用户要求深读。</li>
+<li>Apple Mail 只用于识别 digest 日期和读状态，不作为最终论文数据源。</li>
+<li>发布到飞书必须先获得用户确认。</li>
+</ul>
+<h2 id="导航">导航</h2>
+<p>上一项：<a href="arxiv-daily-paper-radar.html">arxiv-daily-paper-radar</a> · <a href="../index.html">返回首页</a> · 下一项：<a href="research-ui-frontend.html">research-ui-frontend</a></p>
+
+
+      </div>
+</article>
+  </main>
+</body>
+</html>

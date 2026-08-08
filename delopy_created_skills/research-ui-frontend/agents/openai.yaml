@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research UI Frontend"
+  short_description: "Portable research UI frontend kit"
+  default_prompt: "Use $research-ui-frontend to start or migrate this frontend into a research operations UI."

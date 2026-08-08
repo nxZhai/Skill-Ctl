@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>organize-html-reports</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='8'%20fill='%2317191f'/%3E%3Crect%20x='10'%20y='10'%20width='44'%20height='44'%20rx='5'%20fill='%23f3efe7'%20opacity='0.08'/%3E%3Ctext%20x='32'%20y='40'%20text-anchor='middle'%20font-family='Arial,%20Helvetica,%20sans-serif'%20font-size='24'%20font-weight='700'%20fill='%23f3efe7'%3EIx%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../assets/report-workspace.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']],
+        processEscapes: true
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <script defer src="../assets/report-workspace.js"></script>
+</head>
+<body>
+  <header class="report-topbar">
+    <nav class="report-nav" aria-label="Page navigation">
+      <a class="brand-link project-index-link" href="../index.html" aria-label="Open Project Index">Project Index</a>
+    </nav>
+<div class="topbar-meta">
+      <span>Source</span>
+      <code>docs/skills/organize-html-reports.md</code>
+    </div>
+  </header>
+  <main class="report-layout">
+    <aside class="report-sidebar"><nav class="toc" aria-label="Table of contents"><a class="toc-link toc-level-2" href="#何时使用">何时使用</a>
+<a class="toc-link toc-level-2" href="#工作方式">工作方式</a>
+<a class="toc-link toc-level-2" href="#验证重点">验证重点</a>
+<a class="toc-link toc-level-2" href="#边界与注意">边界与注意</a>
+<a class="toc-link toc-level-2" href="#导航">导航</a></nav></aside>
+    <article class="report-article" data-source-path="docs/skills/organize-html-reports.md" data-page-role="subpage" data-page-id="docs/skills/organize-html-reports.html" data-workspace-id="skill-localhub">
+      <header class="article-header">
+        <h1>organize-html-reports</h1>
+        <p class="article-meta">Generated 2026-06-16 02:53 from Markdown.</p>
+      </header>
+
+      <div class="article-body"><p><code>organize-html-reports</code> 用于把研究、阅读或实验目录整理成本地 HTML 工作区。它要求 <code>index.html</code> 作为入口，所有用户需要阅读的页面都从首页可达，并且链接保持项目相对路径，适合直接用 <code>file://</code> 打开。</p>
+<table data-markdown-source="| 项 | 内容 |
+| --- | --- |
+| 类型 | HTML 工作区 |
+| 原始 skill | `personal-agent-skills/skills/organize-html-reports/SKILL.md` |
+| 主要产出 | `index.html`、一组 HTML 报告页、共享 CSS/JS assets、保留的 Markdown 源文件 |">
+<thead>
+<tr>
+<th>项</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>类型</td>
+<td>HTML 工作区</td>
+</tr>
+<tr>
+<td>原始 skill</td>
+<td><code>personal-agent-skills/skills/organize-html-reports/SKILL.md</code></td>
+</tr>
+<tr>
+<td>主要产出</td>
+<td><code>index.html</code>、一组 HTML 报告页、共享 CSS/JS assets、保留的 Markdown 源文件</td>
+</tr>
+</tbody>
+</table>
+<h2 id="何时使用">何时使用</h2>
+<ul>
+<li>需要把 Markdown 笔记、报告、实验结果、论文阅读记录或分析页面组织成可浏览工作区。</li>
+<li>需要让数学公式、表格和 Markdown 源保持可复制或可追溯。</li>
+<li>需要把页面后续同步到飞书或 Lark，但同步只在用户明确要求时做。</li>
+</ul>
+<h2 id="工作方式">工作方式</h2>
+<ol type="1">
+<li>盘点项目中真正面向用户的文档、报告和结果，排除缓存、调试日志、临时文件和重复草稿。</li>
+<li>设计信息架构，以 <code>index.html</code> 为入口，把页面按 docs、reports、experiments、analyses 等类别分组。</li>
+<li>优先用自带 <code>render_markdown_report.py</code> 把 Markdown 渲染为 HTML。</li>
+<li>应用 <code>research-ui-frontend</code> 的研究工具风格。</li>
+<li>只在用户要求时执行飞书或 Lark 同步。</li>
+</ol>
+<h2 id="验证重点">验证重点</h2>
+<ul>
+<li>从首页打开，而不是只检查文件存在。</li>
+<li>首页链接到 HTML 页面，不默认链接原始 <code>.md</code>。</li>
+<li>桌面和移动宽度都要检查。</li>
+<li>表格复制、公式复制和本地 <code>file://</code> 链接按页面内容适用性验证。</li>
+</ul>
+<h2 id="边界与注意">边界与注意</h2>
+<ul>
+<li>保留 Markdown 源文件作为可编辑事实源。</li>
+<li>不硬编码用户名、home 目录或机器本地绝对路径。</li>
+<li>不把工作区首页做成营销页。</li>
+</ul>
+<h2 id="导航">导航</h2>
+<p>上一项：<a href="research-ui-frontend.html">research-ui-frontend</a> · <a href="../index.html">返回首页</a> · 下一项：<a href="local-web-ui-ship-loop.html">local-web-ui-ship-loop</a></p>
+
+
+      </div>
+</article>
+  </main>
+</body>
+</html>

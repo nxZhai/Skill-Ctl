@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skillctl Local Packaging"
+  short_description: "Build and package Skillctl locally"
+  default_prompt: "Use $skillctl-local-packaging to install or package the Skillctl CLI for local macOS use."

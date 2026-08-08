@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>local-web-ui-ship-loop</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='8'%20fill='%2317191f'/%3E%3Crect%20x='10'%20y='10'%20width='44'%20height='44'%20rx='5'%20fill='%23f3efe7'%20opacity='0.08'/%3E%3Ctext%20x='32'%20y='40'%20text-anchor='middle'%20font-family='Arial,%20Helvetica,%20sans-serif'%20font-size='24'%20font-weight='700'%20fill='%23f3efe7'%3EIx%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../assets/report-workspace.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']],
+        processEscapes: true
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <script defer src="../assets/report-workspace.js"></script>
+</head>
+<body>
+  <header class="report-topbar">
+    <nav class="report-nav" aria-label="Page navigation">
+      <a class="brand-link project-index-link" href="../index.html" aria-label="Open Project Index">Project Index</a>
+    </nav>
+<div class="topbar-meta">
+      <span>Source</span>
+      <code>docs/skills/local-web-ui-ship-loop.md</code>
+    </div>
+  </header>
+  <main class="report-layout">
+    <aside class="report-sidebar"><nav class="toc" aria-label="Table of contents"><a class="toc-link toc-level-2" href="#何时使用">何时使用</a>
+<a class="toc-link toc-level-2" href="#工作方式">工作方式</a>
+<a class="toc-link toc-level-2" href="#验证重点">验证重点</a>
+<a class="toc-link toc-level-2" href="#边界与注意">边界与注意</a>
+<a class="toc-link toc-level-2" href="#导航">导航</a></nav></aside>
+    <article class="report-article" data-source-path="docs/skills/local-web-ui-ship-loop.md" data-page-role="subpage" data-page-id="docs/skills/local-web-ui-ship-loop.html" data-workspace-id="skill-localhub">
+      <header class="article-header">
+        <h1>local-web-ui-ship-loop</h1>
+        <p class="article-meta">Generated 2026-06-16 02:53 from Markdown.</p>
+      </header>
+
+      <div class="article-body"><p><code>local-web-ui-ship-loop</code> 是小范围本地 Web UI 修改的执行闭环。它覆盖读代码、做最小改动、构建测试、浏览器验证，以及在用户要求时提交、推送和发布。</p>
+<table data-markdown-source="| 项 | 内容 |
+| --- | --- |
+| 类型 | UI 交付循环 |
+| 原始 skill | `personal-agent-skills/skills/local-web-ui-ship-loop/SKILL.md` |
+| 主要产出 | 已验证的 UI 改动、构建/测试结果、浏览器行为验证记录、可选 commit/push/tag |">
+<thead>
+<tr>
+<th>项</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>类型</td>
+<td>UI 交付循环</td>
+</tr>
+<tr>
+<td>原始 skill</td>
+<td><code>personal-agent-skills/skills/local-web-ui-ship-loop/SKILL.md</code></td>
+</tr>
+<tr>
+<td>主要产出</td>
+<td>已验证的 UI 改动、构建/测试结果、浏览器行为验证记录、可选 commit/push/tag</td>
+</tr>
+</tbody>
+</table>
+<h2 id="何时使用">何时使用</h2>
+<ul>
+<li>用户要求实现、修复或打磨本地 Web UI，而不只是给建议。</li>
+<li>项目类似 React/Vite 前端或 Go embedded frontend。</li>
+<li>需要确认可见布局、交互行为、语言文案和构建产物是否一致。</li>
+</ul>
+<h2 id="工作方式">工作方式</h2>
+<ol type="1">
+<li>用一句话明确改动范围和行为假设。</li>
+<li>用 <code>rg</code> 找组件、CSS、可见文案、API 和 i18n key。</li>
+<li>在受影响组件附近做最小改动，复用已有控件和样式。</li>
+<li>机械验证：前端 build、后端 test、<code>git diff --check</code>。</li>
+<li>浏览器验证：启动本地服务，测试目标行为，必要时测量 DOM 尺寸。</li>
+<li>只有用户要求或项目规范明确时才 commit/push。</li>
+</ol>
+<h2 id="验证重点">验证重点</h2>
+<ul>
+<li>不用“构建通过”替代可视化验证。</li>
+<li>中英文文案同时存在时要一起检查。</li>
+<li>Go 嵌入前端资产时，构建前端后还要确认服务加载的是新 bundle。</li>
+<li>结束时停止自己启动的本地服务。</li>
+</ul>
+<h2 id="边界与注意">边界与注意</h2>
+<ul>
+<li>不扩大成重设计。</li>
+<li>不抽象单一调用点。</li>
+<li>不把本地生成数据、测试草稿或用户 skill 意外 staged。</li>
+</ul>
+<h2 id="导航">导航</h2>
+<p>上一项：<a href="organize-html-reports.html">organize-html-reports</a> · <a href="../index.html">返回首页</a> · 下一项：<a href="init-agents-md.html">init-agents-md</a></p>
+
+
+      </div>
+</article>
+  </main>
+</body>
+</html>

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Packaging Patterns"
+  short_description: "Reusable Agent Skill packaging rules"
+  default_prompt: "Use $skill-packaging-patterns to create or review Agent Skill folders."

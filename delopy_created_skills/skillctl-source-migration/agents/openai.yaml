@@ -1,0 +1,7 @@
+interface:
+  display_name: "Skillctl Source Migration"
+  short_description: "Move skills into upstream Skillctl sources"
+  default_prompt: "Use $skillctl-source-migration to move a vendored or manually installed skill into its upstream Skillctl source safely."
+
+policy:
+  allow_implicit_invocation: true

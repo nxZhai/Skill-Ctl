@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skillctl Local Backend"
+  short_description: "Local Go backend safety patterns"
+  default_prompt: "Use $skillctl-local-backend to implement local skillctl backend behavior."

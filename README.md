@@ -60,24 +60,37 @@ skillctl version
 
 `skillctl ui` initializes local config/data directories, starts an HTTP server on `127.0.0.1` with a random token, and opens the browser.
 
-## 📦 Local Install
+## 📦 Install
 
-Install the embedded `skillctl` binary to `~/.local/bin`:
+### From a GitHub Release
+
+Download the archive for your Mac from [Releases](https://github.com/nxZhai/Skill-Ctl/releases): use `darwin_arm64` for Apple Silicon and `darwin_amd64` for Intel Macs. Extract it, then place the binary in a directory on your `PATH`:
 
 ```bash
-./scripts/install-local.sh
+tar -xzf skillctl_<version>_darwin_arm64.tar.gz
+mkdir -p ~/.local/bin
+install -m 755 skillctl_<version>_darwin_arm64/skillctl ~/.local/bin/skillctl
 ```
 
-If `~/.local/bin` is not already in your shell PATH, add it to `~/.zshrc`:
+If `~/.local/bin` is not already in your shell `PATH`, add this to `~/.zshrc`:
 
 ```bash
 export PATH="$HOME/.local/bin:$PATH"
 ```
 
-Then start Skillctl from any directory:
+Verify the installation:
 
 ```bash
+skillctl version
 skillctl ui
+```
+
+### From a source checkout
+
+Install the embedded `skillctl` binary to `~/.local/bin`:
+
+```bash
+./scripts/install-local.sh
 ```
 
 To install somewhere else, pass `PREFIX`:
@@ -88,19 +101,19 @@ PREFIX=/usr/local ./scripts/install-local.sh
 
 ## 🔄 Updating
 
-Check for a newer GitHub Release:
+Check whether a newer compatible GitHub Release is available:
 
 ```bash
 skillctl update --check
 ```
 
-Install the latest compatible release:
+Download and install the latest compatible Release:
 
 ```bash
 skillctl update
 ```
 
-Before replacing the binary, Skillctl creates a compressed backup under `~/.cache/skillctl/backups/` containing its config, state, managed repositories, and unified skill links. It hashes that data before and after the update and reports an error if anything changed. Starting `skillctl ui` also prints a terminal notice when a newer release is available.
+Before replacing its own binary, Skillctl creates a compressed backup under `~/.cache/skillctl/backups/` containing its configuration, SQLite state, managed repositories, and unified skill links. It validates the Release asset's SHA-256 when GitHub provides one, then hashes the same user data before and after the update. If the data differs, the command fails and leaves the backup in place; it does not automatically restore data. Starting `skillctl ui` also makes a best-effort release check and prints a terminal notice when a newer version is available.
 
 For a source checkout used in development, update the checkout and reinstall it with:
 
@@ -114,7 +127,7 @@ For a source checkout used in development, update the checkout and reinstall it 
 skillctl uninstall
 ```
 
-Uninstall first removes every Skillctl-recorded agent skill symlink, with the same target validation used by the UI. It then asks whether to delete Skillctl-managed local skill repositories. Choosing no preserves those repositories and the local state for a future reinstall.
+Uninstall first removes every Skillctl-recorded agent skill symlink, with the same target validation used by the UI. It then asks whether to delete Skillctl-managed local skill repositories and finally removes the running `skillctl` binary. Choosing no keeps the repositories, configuration, SQLite state, and cache for a future reinstall. If a managed link cannot be validated or removed safely, uninstall stops without deleting the binary.
 
 ## 🗜️ Packaging
 
@@ -151,7 +164,7 @@ npm --prefix web run build
 
 ## 🗂️ Local Data
 
-Skillctl uses:
+By default, Skillctl uses:
 
 ```text
 ~/.config/skillctl/
@@ -159,10 +172,10 @@ Skillctl uses:
 ~/.cache/skillctl/
 ```
 
-Git repositories are cloned under `~/.local/share/skillctl/repos/`. Unified skill symlink entries are created under `~/.local/share/skillctl/skills/`.
+Git repositories are cloned under `~/.local/share/skillctl/repos/`; unified skill symlink entries are created under `~/.local/share/skillctl/skills/`. Both storage directories can be changed in Settings. The initial agent targets are `~/.agents/skills` and `~/.claude/skills` for global activation, with `.agents/skills` and `.claude/skills` for project activation.
 
 ## 🔒 Safety
 
-Skillctl only creates symlinks, refuses to overwrite ordinary files or foreign symlinks, and deletes only activation links recorded in SQLite.
+Skillctl only creates symlinks, refuses to overwrite ordinary files or foreign symlinks, and deletes only activation links recorded in SQLite. A source sync stops when that source has local changes; it uses fast-forward-only Git updates and never resets a source checkout.
 
 Git synchronization uses `fetch --prune` and `merge --ff-only`; it does not run `git reset --hard`. The local UI listens only on `127.0.0.1`, and all API requests must include the random token generated at startup.

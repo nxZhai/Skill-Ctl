@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>remote-server-workspace</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='8'%20fill='%2317191f'/%3E%3Crect%20x='10'%20y='10'%20width='44'%20height='44'%20rx='5'%20fill='%23f3efe7'%20opacity='0.08'/%3E%3Ctext%20x='32'%20y='40'%20text-anchor='middle'%20font-family='Arial,%20Helvetica,%20sans-serif'%20font-size='24'%20font-weight='700'%20fill='%23f3efe7'%3EIx%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../assets/report-workspace.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']],
+        processEscapes: true
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <script defer src="../assets/report-workspace.js"></script>
+</head>
+<body>
+  <header class="report-topbar">
+    <nav class="report-nav" aria-label="Page navigation">
+      <a class="brand-link project-index-link" href="../index.html" aria-label="Open Project Index">Project Index</a>
+    </nav>
+<div class="topbar-meta">
+      <span>Source</span>
+      <code>docs/skills/remote-server-workspace.md</code>
+    </div>
+  </header>
+  <main class="report-layout">
+    <aside class="report-sidebar"><nav class="toc" aria-label="Table of contents"><a class="toc-link toc-level-2" href="#何时使用">何时使用</a>
+<a class="toc-link toc-level-2" href="#必要输入">必要输入</a>
+<a class="toc-link toc-level-2" href="#工作方式">工作方式</a>
+<a class="toc-link toc-level-2" href="#边界与注意">边界与注意</a>
+<a class="toc-link toc-level-2" href="#导航">导航</a></nav></aside>
+    <article class="report-article" data-source-path="docs/skills/remote-server-workspace.md" data-page-role="subpage" data-page-id="docs/skills/remote-server-workspace.html" data-workspace-id="skill-localhub">
+      <header class="article-header">
+        <h1>remote-server-workspace</h1>
+        <p class="article-meta">Generated 2026-06-16 02:53 from Markdown.</p>
+      </header>
+
+      <div class="article-body"><p><code>remote-server-workspace</code> 用于从本地 Codex 会话操作远程 SSH 服务器上的文件、数据、代码和 git 仓库。它把远程执行留在 SSH 中，把本地 skill、飞书/Lark 集成和对话上下文保留在本地。</p>
+<table data-markdown-source="| 项 | 内容 |
+| --- | --- |
+| 类型 | 远程工作区 |
+| 原始 skill | `personal-agent-skills/skills/remote-server-workspace/SKILL.md` |
+| 主要产出 | 远程命令结果、远程文件改动、远程测试结果、可选本地到远程/远程到飞书同步 |">
+<thead>
+<tr>
+<th>项</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>类型</td>
+<td>远程工作区</td>
+</tr>
+<tr>
+<td>原始 skill</td>
+<td><code>personal-agent-skills/skills/remote-server-workspace/SKILL.md</code></td>
+</tr>
+<tr>
+<td>主要产出</td>
+<td>远程命令结果、远程文件改动、远程测试结果、可选本地到远程/远程到飞书同步</td>
+</tr>
+</tbody>
+</table>
+<h2 id="何时使用">何时使用</h2>
+<ul>
+<li>用户要求进入某个 SSH 主机、远程项目目录或 conda 环境。</li>
+<li>需要检查、编辑或运行远程代码和数据命令。</li>
+<li>需要操作远程 git 仓库，或在远程文件和飞书/Lark 之间同步。</li>
+</ul>
+<h2 id="必要输入">必要输入</h2>
+<ul>
+<li>SSH host alias。</li>
+<li>远程项目目录。</li>
+<li>conda 环境名，除非任务明确不需要环境。</li>
+<li>具体操作类型：检查、编辑、运行、git、同步等。</li>
+<li>是否需要通过本地代理访问外网。</li>
+</ul>
+<h2 id="工作方式">工作方式</h2>
+<ol type="1">
+<li>优先用自带 <code>remote_session.py</code> helper 创建可重复 SSH 会话。</li>
+<li>先做只读发现：<code>pwd</code>、<code>ls</code>、<code>git status</code>、目标 <code>rg</code> 或 <code>find</code>。</li>
+<li>小生成文件可在远程直接创建；复杂编辑应复制到本地临时路径后再上传。</li>
+<li>修改后用远程 <code>git diff</code>、校验和、测试或目标命令验证。</li>
+<li>需要飞书/Lark 同步时，远程文件先复制到本地，再用本地 Lark skill 处理。</li>
+</ol>
+<h2 id="边界与注意">边界与注意</h2>
+<ul>
+<li>缺少必要输入时只问缺失项。</li>
+<li>删除文件、覆盖大数据、push、使用代理转发等风险操作必须明确确认。</li>
+<li>不运行 <code>git reset --hard</code>、<code>git clean</code>、强推、rebase 共享分支或删除分支，除非用户明确要求。</li>
+<li>远程仓库已有脏改动时，保留并绕开。</li>
+</ul>
+<h2 id="导航">导航</h2>
+<p>上一项：<a href="weekly.html">weekly</a> · <a href="../index.html">返回首页</a> · 下一项：<a href="self.html">self</a></p>
+
+
+      </div>
+</article>
+  </main>
+</body>
+</html>

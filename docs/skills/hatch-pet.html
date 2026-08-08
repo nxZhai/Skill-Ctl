@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>hatch-pet</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='8'%20fill='%2317191f'/%3E%3Crect%20x='10'%20y='10'%20width='44'%20height='44'%20rx='5'%20fill='%23f3efe7'%20opacity='0.08'/%3E%3Ctext%20x='32'%20y='40'%20text-anchor='middle'%20font-family='Arial,%20Helvetica,%20sans-serif'%20font-size='24'%20font-weight='700'%20fill='%23f3efe7'%3EIx%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../assets/report-workspace.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']],
+        processEscapes: true
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <script defer src="../assets/report-workspace.js"></script>
+</head>
+<body>
+  <header class="report-topbar">
+    <nav class="report-nav" aria-label="Page navigation">
+      <a class="brand-link project-index-link" href="../index.html" aria-label="Open Project Index">Project Index</a>
+    </nav>
+<div class="topbar-meta">
+      <span>Source</span>
+      <code>docs/skills/hatch-pet.md</code>
+    </div>
+  </header>
+  <main class="report-layout">
+    <aside class="report-sidebar"><nav class="toc" aria-label="Table of contents"><a class="toc-link toc-level-2" href="#何时使用">何时使用</a>
+<a class="toc-link toc-level-2" href="#工作方式">工作方式</a>
+<a class="toc-link toc-level-2" href="#质量标准">质量标准</a>
+<a class="toc-link toc-level-2" href="#边界与注意">边界与注意</a>
+<a class="toc-link toc-level-2" href="#导航">导航</a></nav></aside>
+    <article class="report-article" data-source-path="docs/skills/hatch-pet.md" data-page-role="subpage" data-page-id="docs/skills/hatch-pet.html" data-workspace-id="skill-localhub">
+      <header class="article-header">
+        <h1>hatch-pet</h1>
+        <p class="article-meta">Generated 2026-06-16 02:53 from Markdown.</p>
+      </header>
+
+      <div class="article-body"><p><code>hatch-pet</code> 用于从概念、参考图、公司或产品品牌线索生成 Codex 兼容的动画 pet 包。它把 <code>$imagegen</code> 用作视觉生成层，把确定性的脚本用于精灵图几何、透明背景、验证、预览和打包。</p>
+<table data-markdown-source="| 项 | 内容 |
+| --- | --- |
+| 类型 | 视觉资产 |
+| 原始 skill | `personal-agent-skills/skills/hatch-pet/SKILL.md` |
+| 主要产出 | `pet.json`、`spritesheet.webp`、contact sheet、逐行动画预览、验证 JSON |">
+<thead>
+<tr>
+<th>项</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>类型</td>
+<td>视觉资产</td>
+</tr>
+<tr>
+<td>原始 skill</td>
+<td><code>personal-agent-skills/skills/hatch-pet/SKILL.md</code></td>
+</tr>
+<tr>
+<td>主要产出</td>
+<td><code>pet.json</code>、<code>spritesheet.webp</code>、contact sheet、逐行动画预览、验证 JSON</td>
+</tr>
+</tbody>
+</table>
+<h2 id="何时使用">何时使用</h2>
+<ul>
+<li>用户想创建、修复、验证或打包 Codex app 自定义动画 pet。</li>
+<li>输入可能是文本概念、角色图、品牌/公司/产品名称或视觉参考。</li>
+<li>需要完整 8x9 atlas、透明未用格、QA contact sheet 和 Codex pet 包。</li>
+</ul>
+<h2 id="工作方式">工作方式</h2>
+<ol type="1">
+<li>如果用户只给品牌或公司名，先做轻量品牌发现，提炼视觉和气质线索。</li>
+<li>准备 pet run 目录和 <code>imagegen-jobs.json</code>。</li>
+<li>用 <code>$imagegen</code> 生成 base，再以 canonical base 约束每个动画 row。</li>
+<li>按状态生成 <code>idle</code>、<code>running-right</code>、<code>running-left</code>、<code>waving</code>、<code>jumping</code>、<code>failed</code>、<code>waiting</code>、<code>running</code> 和 <code>review</code>。</li>
+<li>只有在视觉安全时，才用脚本从 <code>running-right</code> 派生 <code>running-left</code>。</li>
+<li>完成所有视觉 job 后，运行帧提取、检查、atlas 合成、验证、contact sheet 和 GIF 预览。</li>
+<li>通过视觉 QA 后写入 Codex pet 目录，并清理中间产物。</li>
+</ol>
+<h2 id="质量标准">质量标准</h2>
+<ul>
+<li>单格按 <code>192x208</code> 设计，最终 atlas 为 <code>1536x1872</code>。</li>
+<li>同一个 pet 的脸、比例、材质、配色、道具和轮廓必须跨行一致。</li>
+<li>背景应可干净移除，未用格应完全透明。</li>
+<li>禁止文本、UI、可读 logo、阴影、光晕、漂浮特效、速度线、灰尘和会破坏透明提取的元素。</li>
+<li>contact sheet 和 row GIF 必须通过视觉 QA，不能只看 JSON 验证结果。</li>
+</ul>
+<h2 id="边界与注意">边界与注意</h2>
+<ul>
+<li>视觉生成只能走 <code>$imagegen</code>，不能换成自写图片生成脚本或其他图像 API。</li>
+<li>parent agent 负责 manifest、复制、确定性脚本、打包和清理；轻量 worker 只负责单个视觉 job 或最终视觉 QA。</li>
+<li>修复失败时只重做最小失败范围，不重做整张表。</li>
+</ul>
+<h2 id="导航">导航</h2>
+<p>上一项：<a href="self.html">self</a> · <a href="../index.html">返回首页</a></p>
+
+
+      </div>
+</article>
+  </main>
+</body>
+</html>

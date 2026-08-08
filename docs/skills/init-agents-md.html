@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>init-agents-md</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='8'%20fill='%2317191f'/%3E%3Crect%20x='10'%20y='10'%20width='44'%20height='44'%20rx='5'%20fill='%23f3efe7'%20opacity='0.08'/%3E%3Ctext%20x='32'%20y='40'%20text-anchor='middle'%20font-family='Arial,%20Helvetica,%20sans-serif'%20font-size='24'%20font-weight='700'%20fill='%23f3efe7'%3EIx%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../assets/report-workspace.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']],
+        processEscapes: true
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <script defer src="../assets/report-workspace.js"></script>
+</head>
+<body>
+  <header class="report-topbar">
+    <nav class="report-nav" aria-label="Page navigation">
+      <a class="brand-link project-index-link" href="../index.html" aria-label="Open Project Index">Project Index</a>
+    </nav>
+<div class="topbar-meta">
+      <span>Source</span>
+      <code>docs/skills/init-agents-md.md</code>
+    </div>
+  </header>
+  <main class="report-layout">
+    <aside class="report-sidebar"><nav class="toc" aria-label="Table of contents"><a class="toc-link toc-level-2" href="#何时使用">何时使用</a>
+<a class="toc-link toc-level-2" href="#工作方式">工作方式</a>
+<a class="toc-link toc-level-2" href="#边界与注意">边界与注意</a>
+<a class="toc-link toc-level-2" href="#导航">导航</a></nav></aside>
+    <article class="report-article" data-source-path="docs/skills/init-agents-md.md" data-page-role="subpage" data-page-id="docs/skills/init-agents-md.html" data-workspace-id="skill-localhub">
+      <header class="article-header">
+        <h1>init-agents-md</h1>
+        <p class="article-meta">Generated 2026-06-16 02:53 from Markdown.</p>
+      </header>
+
+      <div class="article-body"><p><code>init-agents-md</code> 用于在 Codex App 中创建或更新项目 <code>AGENTS.md</code>，相当于一个更谨慎、更项目化的 <code>/init</code> 工作流。它会先检查项目，再写出可执行、可继承、可维护的 agent 指令。</p>
+<table data-markdown-source="| 项 | 内容 |
+| --- | --- |
+| 类型 | 项目指令初始化 |
+| 原始 skill | `personal-agent-skills/skills/init-agents-md/SKILL.md` |
+| 主要产出 | 项目 `AGENTS.md`、可选项目本地 skill 建议、portable path 检查结果 |">
+<thead>
+<tr>
+<th>项</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>类型</td>
+<td>项目指令初始化</td>
+</tr>
+<tr>
+<td>原始 skill</td>
+<td><code>personal-agent-skills/skills/init-agents-md/SKILL.md</code></td>
+</tr>
+<tr>
+<td>主要产出</td>
+<td>项目 <code>AGENTS.md</code>、可选项目本地 skill 建议、portable path 检查结果</td>
+</tr>
+</tbody>
+</table>
+<h2 id="何时使用">何时使用</h2>
+<ul>
+<li>用户要求初始化 <code>AGENTS.md</code>、写项目贡献者/agent 指令或补充项目规则。</li>
+<li>项目类型需要明确，例如全栈、研究代码、文档报告、skill 仓库、飞书工作流或混合项目。</li>
+<li>需要把历史偏好转成项目级的可复用规则。</li>
+</ul>
+<h2 id="工作方式">工作方式</h2>
+<ol type="1">
+<li>先运行项目检查脚本和 portable path 检查。</li>
+<li>阅读现有 <code>AGENTS.md</code>、README、包管理文件、测试配置和目录结构。</li>
+<li>只问会阻塞写作的问题。</li>
+<li>基于模板、instruction discovery 规则和项目类型写草稿。</li>
+<li>根据是否有 GitHub remote 写入 commit/push 完成规则。</li>
+<li>推荐真正重复出现的项目 skill 或 subagent。</li>
+<li>写入后复查 Markdown 结构和路径可移植性。</li>
+</ol>
+<h2 id="边界与注意">边界与注意</h2>
+<ul>
+<li>不盲目覆盖已有非空 <code>AGENTS.md</code>。</li>
+<li>不擅自 <code>git init</code>、clone、push 或启用外部 skill。</li>
+<li>不写机器特定用户名或绝对 home 路径进可复用指令。</li>
+<li>不把原始聊天记录塞进项目指令。</li>
+</ul>
+<h2 id="导航">导航</h2>
+<p>上一项：<a href="local-web-ui-ship-loop.html">local-web-ui-ship-loop</a> · <a href="../index.html">返回首页</a> · 下一项：<a href="office-report-materials.html">office-report-materials</a></p>
+
+
+      </div>
+</article>
+  </main>
+</body>
+</html>

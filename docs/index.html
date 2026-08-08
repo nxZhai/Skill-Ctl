@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Personal Agent Skills 索引</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='8'%20fill='%2317191f'/%3E%3Crect%20x='10'%20y='10'%20width='44'%20height='44'%20rx='5'%20fill='%23f3efe7'%20opacity='0.08'/%3E%3Ctext%20x='32'%20y='40'%20text-anchor='middle'%20font-family='Arial,%20Helvetica,%20sans-serif'%20font-size='24'%20font-weight='700'%20fill='%23f3efe7'%3EIx%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/report-workspace.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']],
+        processEscapes: true
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <script defer src="assets/report-workspace.js"></script>
+</head>
+<body>
+  <header class="report-topbar">
+    <nav class="report-nav" aria-label="Page navigation">
+      <a class="brand-link desktop-index-link" href="file:///Users/naixinzhai/Desktop/index.html" aria-label="Open Desktop Index">Desktop Index</a>
+    </nav>
+<div class="topbar-meta">
+      <span>Source</span>
+      <code>docs/index.md</code>
+    </div>
+  </header>
+  <main class="report-layout">
+    <aside class="report-sidebar"><nav class="toc" aria-label="Table of contents"><a class="toc-link toc-level-2" href="#总览">总览</a>
+<a class="toc-link toc-level-2" href="#选用路径">选用路径</a>
+<a class="toc-link toc-level-3" href="#研究与论文">研究与论文</a>
+<a class="toc-link toc-level-3" href="#本地-ui-与-html-报告">本地 UI 与 HTML 报告</a>
+<a class="toc-link toc-level-3" href="#项目规则与正式材料">项目规则与正式材料</a>
+<a class="toc-link toc-level-3" href="#环境复盘与资产">环境、复盘与资产</a>
+<a class="toc-link toc-level-2" href="#源目录">源目录</a></nav></aside>
+    <article class="report-article workspace-focus-target" data-source-path="docs/index.md" data-page-role="project-index" data-page-id="docs/index.html" data-workspace-id="skill-localhub">
+      <header class="article-header">
+        <h1>Personal Agent Skills 索引</h1>
+        <p class="article-meta">Generated 2026-06-16 02:53 from Markdown.</p>
+      </header>
+
+      <div class="article-body"><p>这个目录把 <code>personal-agent-skills</code> 中的 12 个 skill 整理成一个本地 HTML 工作区。首页用于快速选路，每个详情页介绍一个 skill 的使用场景、核心流程、产出验证和边界。</p>
+<h2 id="总览">总览</h2>
+<table data-markdown-source="| Skill | 类型 | 适用场景 | 详情 |
+| --- | --- | --- | --- |
+| `align-research-project` | 研究对齐 | 科研方向、问题、技术路线或实验计划还不清楚时，先对齐理解再执行。 | [查看](skills/align-research-project.html) |
+| `arxiv-daily-paper-radar` | 论文雷达 | 从个性化 Daily arXiv 邮件中筛选、排序并总结高价值论文。 | [查看](skills/arxiv-daily-paper-radar.html) |
+| `hf-daily-paper-radar` | 论文雷达 | 拉取 Hugging Face Daily Papers，按用户研究兴趣生成中文阅读报告。 | [查看](skills/hf-daily-paper-radar.html) |
+| `research-ui-frontend` | 前端视觉规范 | 为研究工具、运营后台和本地开发 UI 套用 Skillctl 风格。 | [查看](skills/research-ui-frontend.html) |
+| `organize-html-reports` | HTML 工作区 | 把 Markdown、报告、实验记录和阅读材料组织成 `index.html` 入口的本地网页。 | [查看](skills/organize-html-reports.html) |
+| `local-web-ui-ship-loop` | UI 交付循环 | 小范围本地 Web UI 修改、构建、浏览器验证、提交和发布。 | [查看](skills/local-web-ui-ship-loop.html) |
+| `init-agents-md` | 项目指令初始化 | 为项目创建或更新 `AGENTS.md`，沉淀项目规则和可复用 workflow。 | [查看](skills/init-agents-md.html) |
+| `office-report-materials` | 正式材料 | 扩写、打磨和检查 Word/PPT 学术、项目、专利或中期报告材料。 | [查看](skills/office-report-materials.html) |
+| `weekly` | 周报 | 根据简要笔记生成正式周报 DOCX，并按需导出 PDF 或准备邮件。 | [查看](skills/weekly.html) |
+| `remote-server-workspace` | 远程工作区 | 通过本地 Codex 会话操作远程 SSH 服务器上的代码、数据和 git 仓库。 | [查看](skills/remote-server-workspace.html) |
+| `self` | 自我复盘 | 复盘本地 Codex 历史，提取长期偏好、执行教训和可复用规则并归档。 | [查看](skills/self.html) |
+| `hatch-pet` | 视觉资产 | 从概念、参考图或品牌线索创建 Codex 兼容的动画 pet 精灵图。 | [查看](skills/hatch-pet.html) |">
+<thead>
+<tr>
+<th>Skill</th>
+<th>类型</th>
+<th>适用场景</th>
+<th>详情</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>align-research-project</code></td>
+<td>研究对齐</td>
+<td>科研方向、问题、技术路线或实验计划还不清楚时，先对齐理解再执行。</td>
+<td><a href="skills/align-research-project.html">查看</a></td>
+</tr>
+<tr>
+<td><code>arxiv-daily-paper-radar</code></td>
+<td>论文雷达</td>
+<td>从个性化 Daily arXiv 邮件中筛选、排序并总结高价值论文。</td>
+<td><a href="skills/arxiv-daily-paper-radar.html">查看</a></td>
+</tr>
+<tr>
+<td><code>hf-daily-paper-radar</code></td>
+<td>论文雷达</td>
+<td>拉取 Hugging Face Daily Papers，按用户研究兴趣生成中文阅读报告。</td>
+<td><a href="skills/hf-daily-paper-radar.html">查看</a></td>
+</tr>
+<tr>
+<td><code>research-ui-frontend</code></td>
+<td>前端视觉规范</td>
+<td>为研究工具、运营后台和本地开发 UI 套用 Skillctl 风格。</td>
+<td><a href="skills/research-ui-frontend.html">查看</a></td>
+</tr>
+<tr>
+<td><code>organize-html-reports</code></td>
+<td>HTML 工作区</td>
+<td>把 Markdown、报告、实验记录和阅读材料组织成 <code>index.html</code> 入口的本地网页。</td>
+<td><a href="skills/organize-html-reports.html">查看</a></td>
+</tr>
+<tr>
+<td><code>local-web-ui-ship-loop</code></td>
+<td>UI 交付循环</td>
+<td>小范围本地 Web UI 修改、构建、浏览器验证、提交和发布。</td>
+<td><a href="skills/local-web-ui-ship-loop.html">查看</a></td>
+</tr>
+<tr>
+<td><code>init-agents-md</code></td>
+<td>项目指令初始化</td>
+<td>为项目创建或更新 <code>AGENTS.md</code>，沉淀项目规则和可复用 workflow。</td>
+<td><a href="skills/init-agents-md.html">查看</a></td>
+</tr>
+<tr>
+<td><code>office-report-materials</code></td>
+<td>正式材料</td>
+<td>扩写、打磨和检查 Word/PPT 学术、项目、专利或中期报告材料。</td>
+<td><a href="skills/office-report-materials.html">查看</a></td>
+</tr>
+<tr>
+<td><code>weekly</code></td>
+<td>周报</td>
+<td>根据简要笔记生成正式周报 DOCX，并按需导出 PDF 或准备邮件。</td>
+<td><a href="skills/weekly.html">查看</a></td>
+</tr>
+<tr>
+<td><code>remote-server-workspace</code></td>
+<td>远程工作区</td>
+<td>通过本地 Codex 会话操作远程 SSH 服务器上的代码、数据和 git 仓库。</td>
+<td><a href="skills/remote-server-workspace.html">查看</a></td>
+</tr>
+<tr>
+<td><code>self</code></td>
+<td>自我复盘</td>
+<td>复盘本地 Codex 历史，提取长期偏好、执行教训和可复用规则并归档。</td>
+<td><a href="skills/self.html">查看</a></td>
+</tr>
+<tr>
+<td><code>hatch-pet</code></td>
+<td>视觉资产</td>
+<td>从概念、参考图或品牌线索创建 Codex 兼容的动画 pet 精灵图。</td>
+<td><a href="skills/hatch-pet.html">查看</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="选用路径">选用路径</h2>
+<h3 id="研究与论文">研究与论文</h3>
+<ul>
+<li>先用 <code>align-research-project</code> 对齐科研问题、方法边界和实验目标。</li>
+<li>对每日论文源做筛选时，Apple Mail 个性化 arXiv 摘要走 <code>arxiv-daily-paper-radar</code>，Hugging Face Daily Papers 走 <code>hf-daily-paper-radar</code>。</li>
+</ul>
+<h3 id="本地-ui-与-html-报告">本地 UI 与 HTML 报告</h3>
+<ul>
+<li>视觉风格、组件密度、色彩和排版规则由 <code>research-ui-frontend</code> 决定。</li>
+<li>需要把文档、实验记录、论文笔记变成本地网页入口时，用 <code>organize-html-reports</code>。</li>
+<li>对 React/Vite 或 Go embedded frontend 做小改动并要验证时，用 <code>local-web-ui-ship-loop</code>。</li>
+</ul>
+<h3 id="项目规则与正式材料">项目规则与正式材料</h3>
+<ul>
+<li>新项目或需要补全 agent 行为规范时，用 <code>init-agents-md</code>。</li>
+<li>正式 Word/PPT 报告、专利材料、中期材料走 <code>office-report-materials</code>。</li>
+<li>每周工作汇报、模板填充、PDF 导出和邮件附件流程走 <code>weekly</code>。</li>
+</ul>
+<h3 id="环境复盘与资产">环境、复盘与资产</h3>
+<ul>
+<li>远程 SSH 项目、conda 环境、远程 git 和远程文件同步走 <code>remote-server-workspace</code>。</li>
+<li>从历史对话和执行日志提炼长期规则走 <code>self</code>。</li>
+<li>需要生成 Codex app 可用的动画 pet 包时，走 <code>hatch-pet</code>。</li>
+</ul>
+<h2 id="源目录">源目录</h2>
+<p>这些页面介绍的是 <code>personal-agent-skills/skills/&lt;skill-name&gt;/SKILL.md</code> 中的工作流。当前 HTML 工作区只保留相对链接，适合直接用 <code>file://</code> 打开。</p>
+
+
+      </div>
+</article>
+  </main>
+</body>
+</html>

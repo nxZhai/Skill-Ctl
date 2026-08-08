@@ -1,0 +1,29 @@
+web/node_modules/
+web/dist/*
+!web/dist/.gitkeep
+web/tsconfig.tsbuildinfo
+.DS_Store
+/skillctl
+/dist/
+
+# Local build/test/cache output
+.cache/
+.playwright-mcp/
+*.log
+
+# Generated local UI check artifacts
+typography-check*.png
+enable-state-check.png
+
+# Local reports can contain imported repo/skill paths and personal state.
+reports/
+
+# User-managed skillctl data must live outside the app repo history.
+/repos/
+/skills/
+/personal-agent-skills/
+/locks/
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*

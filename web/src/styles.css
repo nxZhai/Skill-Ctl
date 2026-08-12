@@ -2026,6 +2026,7 @@ button.sourceDeleteButton:hover {
 }
 
 .status.up-to-date,
+.status.local-source,
 .status.ok {
   background: var(--success-surface);
   color: var(--success);

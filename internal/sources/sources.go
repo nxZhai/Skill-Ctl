@@ -54,15 +54,36 @@ func (m *Manager) Add(ctx context.Context, id, url, branch string) (model.Source
 	}
 	checkout := filepath.Join(m.Paths.ReposDir, id)
 	if _, err := os.Stat(checkout); err == nil {
-		return model.SourceView{}, nil, fmt.Errorf("checkout path already exists: %s", checkout)
+		return m.bindExistingCheckout(ctx, id, url, branch, checkout)
 	} else if !errors.Is(err, os.ErrNotExist) {
 		return model.SourceView{}, nil, err
 	}
 	if err := runGit(ctx, "", "clone", "--branch", branch, "--", url, checkout); err != nil {
 		return model.SourceView{}, nil, err
 	}
+	return m.registerCheckout(ctx, id, url, branch, checkout)
+}
+
+func (m *Manager) bindExistingCheckout(ctx context.Context, id, url, branch, checkout string) (model.SourceView, []model.Skill, error) {
+	originURL, err := gitOutput(ctx, checkout, "remote", "get-url", "origin")
+	if err != nil {
+		return model.SourceView{}, nil, fmt.Errorf("existing checkout is not a Git repository with an origin remote: %s", checkout)
+	}
+	if originURL != url {
+		return model.SourceView{}, nil, fmt.Errorf("existing checkout origin does not match git url: %s", checkout)
+	}
+	if _, err := gitOutput(ctx, checkout, "rev-parse", "--verify", "refs/heads/"+branch); err != nil {
+		return model.SourceView{}, nil, fmt.Errorf("existing checkout does not contain local branch %q: %s", branch, checkout)
+	}
+	return m.registerCheckout(ctx, id, url, branch, checkout)
+}
+
+func (m *Manager) registerCheckout(ctx context.Context, id, url, branch, checkout string) (model.SourceView, []model.Skill, error) {
 	local, _ := gitOutput(ctx, checkout, "rev-parse", "HEAD")
-	remote, _ := gitOutput(ctx, checkout, "rev-parse", "origin/"+branch)
+	remote := ""
+	if !isLocalSource(checkout) {
+		remote, _ = gitOutput(ctx, checkout, "rev-parse", "origin/"+branch)
+	}
 	src := model.Source{
 		ID:           id,
 		URL:          url,
@@ -588,6 +609,16 @@ func (m *Manager) View(ctx context.Context, src model.Source) (model.SourceView,
 		return model.SourceView{}, err
 	}
 	view := model.SourceView{Source: src, SkillCount: count, Status: "Not checked"}
+	if isLocalSource(src.CheckoutPath) {
+		view.LocalSource = true
+		view.RemoteSHA = ""
+		view.LocalPath, _ = filepath.EvalSymlinks(src.CheckoutPath)
+		view.LocalBranch, _ = gitOutput(ctx, src.CheckoutPath, "branch", "--show-current")
+		view.LocalSHA, _ = gitOutput(ctx, src.CheckoutPath, "rev-parse", "HEAD")
+		view.LastCommitAt, _ = gitOutput(ctx, src.CheckoutPath, "show", "-s", "--format=%cI", "HEAD")
+		view.Status = "Local source"
+		return view, nil
+	}
 	if local, err := gitOutput(ctx, src.CheckoutPath, "rev-parse", "HEAD"); err == nil {
 		view.LocalSHA = local
 	}
@@ -662,7 +693,11 @@ func (m *Manager) AnnotateSkillChanges(ctx context.Context, skills []model.Skill
 				skill.LocalChanged = true
 			})
 		}
-		if remotePaths, err := remoteChangedPaths(ctx, src.CheckoutPath, src.Branch); err == nil {
+		if !isLocalSource(src.CheckoutPath) {
+			remotePaths, err := remoteChangedPaths(ctx, src.CheckoutPath, src.Branch)
+			if err != nil {
+				continue
+			}
 			markChangedSkills(skills, indexes, remotePaths, func(skill *model.Skill) {
 				skill.RemoteChanged = true
 			})
@@ -675,6 +710,9 @@ func (m *Manager) Check(ctx context.Context, id string) (model.SourceView, error
 	src, err := m.DB.GetSource(id)
 	if err != nil {
 		return model.SourceView{}, err
+	}
+	if isLocalSource(src.CheckoutPath) {
+		return m.View(ctx, src)
 	}
 	if err := runGit(ctx, src.CheckoutPath, "fetch", "--all", "--prune"); err != nil {
 		view, _ := m.View(ctx, src)
@@ -703,6 +741,14 @@ func (m *Manager) Sync(ctx context.Context, id string) (model.SourceView, []mode
 	src, err := m.DB.GetSource(id)
 	if err != nil {
 		return model.SourceView{}, nil, err
+	}
+	if isLocalSource(src.CheckoutPath) {
+		skills, err := m.Scanner.ScanSource(src)
+		if err != nil {
+			return model.SourceView{}, nil, err
+		}
+		view, err := m.View(ctx, src)
+		return view, skills, err
 	}
 	if changed, err := hasLocalChanges(ctx, src.CheckoutPath); err != nil {
 		return model.SourceView{}, nil, err
@@ -790,6 +836,11 @@ func remoteChangedPaths(ctx context.Context, dir, branch string) ([]string, erro
 		return nil, err
 	}
 	return parseChangedPathLines(out), nil
+}
+
+func isLocalSource(checkout string) bool {
+	info, err := os.Lstat(checkout)
+	return err == nil && info.Mode()&os.ModeSymlink != 0
 }
 
 func markChangedSkills(skills []model.Skill, indexes []int, changedPaths []string, mark func(*model.Skill)) {

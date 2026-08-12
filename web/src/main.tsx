@@ -34,6 +34,9 @@ type Source = {
   behind?: number;
   ahead?: number;
   remotes?: SourceRemote[];
+  local_source?: boolean;
+  local_path?: string;
+  local_branch?: string;
 };
 type SourceRemote = {
   name: string;
@@ -252,6 +255,7 @@ const messages = {
     skillSymlink: "Symlink",
     skillSymlinkPath: "Symlink path",
     localCommit: "Local",
+    localSource: "Local source",
     localRepo: "Local Repo",
     lastUpdated: "Updated {time}",
     remoteCommit: "Remote",
@@ -264,6 +268,7 @@ const messages = {
     sourceView: "Sources",
     statusIssue: "Issue",
     statusLocalChanges: "Local changes",
+    statusLocalSource: "Local source",
     statusOk: "OK",
     statusSyncFailed: "Sync failed",
     statusUpdateAvailable: "Update available",
@@ -443,6 +448,7 @@ const messages = {
     skillSymlink: "软链接",
     skillSymlinkPath: "软链接位置",
     localCommit: "本地",
+    localSource: "本地来源",
     localRepo: "Local Repo",
     lastUpdated: "最近更新 {time}",
     remoteCommit: "远程",
@@ -455,6 +461,7 @@ const messages = {
     sourceView: "Sources",
     statusIssue: "问题",
     statusLocalChanges: "本地修改",
+    statusLocalSource: "本地来源",
     statusOk: "正常",
     statusSyncFailed: "同步失败",
     statusUpdateAvailable: "可更新",
@@ -732,6 +739,7 @@ function skillActivationSummary(skills: Skill[]) {
 }
 
 function sourceNeedsSync(source: Source) {
+	if (source.local_source) return false;
   if (source.remotes?.length) return source.remotes.some((remote) => (remote.behind || 0) > 0);
   return (source.behind || 0) > 0 || (Boolean(source.local_sha) && Boolean(source.remote_sha) && source.local_sha !== source.remote_sha);
 }
@@ -3535,20 +3543,23 @@ function SourcesPage({
                     <span className="sourceHeaderMeta">
                       <span className="sourceSkillCount">{t("sourceSkillCount", { count: source.skill_count })}</span>
                       <Status value={source.status} t={t} />
-                      {(source.remote_sha || source.local_sha) && (
+                      {(source.remote_sha || source.local_sha || source.local_branch) && (
                         <span className="repoCommitPills">
-                          {source.remote_sha && (
+                          {!source.local_source && source.remote_sha && (
                             <span className="commitPill" title={source.remote_sha}>{t("remoteCommit")} {shortSha(source.remote_sha)}</span>
                           )}
                           {source.local_sha && (
                             <span className="commitPill" title={source.local_sha}>{t("localCommit")} {shortSha(source.local_sha)}</span>
+                          )}
+                          {source.local_source && source.local_branch && (
+                            <span className="commitPill" title={source.local_branch}>{t("branch")} {source.local_branch}</span>
                           )}
                         </span>
                       )}
                     </span>
                   </div>
                   <div className="repoDetails">
-                    {sourceRemoteRows(source).map((remote, index) => (
+                    {!source.local_source && sourceRemoteRows(source).map((remote, index) => (
                       <div className="repoLine remoteRepoLine" key={`${remote.name}-${remote.branch || index}`}>
                         <span className="repoLineLabel iconOnly" aria-label={t("remoteRepo")} title={t("remoteRepo")}>
                           <span className="githubMark" aria-label="GitHub">
@@ -3578,10 +3589,10 @@ function SourcesPage({
                       <button
                         type="button"
                         className="mono repoPath repoLink repoPathButton"
-                        title={source.checkout_path}
+                        title={source.local_path || source.checkout_path}
                         onClick={() => run(`Open ${source.id}`, () => api(`/api/sources/${encodeURIComponent(source.id)}/open-dir`, { method: "POST" }))}
                       >
-                        <MiddleEllipsisText value={source.checkout_path} />
+                        <MiddleEllipsisText value={source.local_path || source.checkout_path} />
                       </button>
                     </div>
                   </div>
@@ -3589,7 +3600,7 @@ function SourcesPage({
                   <SourceNote source={source} run={run} busyLabel={busyLabel} t={t} />
                 </div>
                 <div className="sourceActions">
-                  <div className="actions sourceActionButtons">
+                  {!source.local_source && <div className="actions sourceActionButtons">
                     <button disabled={bulkRunning || busyLabel === `Check ${source.id}`} onClick={(e) => { e.stopPropagation(); run(`Check ${source.id}`, () => api(`/api/sources/${encodeURIComponent(source.id)}/check`, { method: "POST" })); }}>
                       {busyLabel === `Check ${source.id}` && <Spinner />}
                       <IconButtonContent icon="check">{t("check")}</IconButtonContent>
@@ -3598,7 +3609,7 @@ function SourcesPage({
                       {busyLabel === `Sync ${source.id}` && <Spinner />}
                       <IconButtonContent icon="sync">{t("sync")}</IconButtonContent>
                     </button>
-                  </div>
+                  </div>}
                   {updatedText && (
                     <span className="repoUpdatedPill sourceUpdatedPill" title={updatedAt}>
                       {t("lastUpdated", { time: updatedText })}
@@ -4103,6 +4114,8 @@ function statusText(normalized: string, fallback: string, t: Translate) {
       return t("statusUpdateAvailable");
     case "local-changes":
       return t("statusLocalChanges");
+    case "local-source":
+      return t("statusLocalSource");
     case "sync-failed":
       return t("statusSyncFailed");
     default:

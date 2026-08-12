@@ -22,6 +22,9 @@ type SourceView struct {
 	Ahead        int            `json:"ahead,omitempty"`
 	LastCommitAt string         `json:"last_commit_at,omitempty"`
 	Remotes      []SourceRemote `json:"remotes,omitempty"`
+	LocalSource  bool           `json:"local_source,omitempty"`
+	LocalPath    string         `json:"local_path,omitempty"`
+	LocalBranch  string         `json:"local_branch,omitempty"`
 }
 
 type SourceRemote struct {

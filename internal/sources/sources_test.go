@@ -12,6 +12,120 @@ import (
 	"skillctl/internal/scanner"
 )
 
+func TestAddBindsExistingCheckout(t *testing.T) {
+	if _, err := exec.LookPath("git"); err != nil {
+		t.Skip("git is not available")
+	}
+	root := t.TempDir()
+	paths := model.Paths{
+		ReposDir:  filepath.Join(root, "repos"),
+		SkillsDir: filepath.Join(root, "skills"),
+	}
+	upstream := filepath.Join(root, "upstream")
+	origin := filepath.Join(root, "origin.git")
+	checkout := filepath.Join(paths.ReposDir, "demo")
+
+	git(t, root, "init", upstream)
+	configureGitUser(t, upstream)
+	if err := os.MkdirAll(filepath.Join(upstream, "skills", "example"), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(upstream, "skills", "example", "SKILL.md"), []byte("---\nname: Example\n---\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	git(t, upstream, "add", ".")
+	git(t, upstream, "commit", "-m", "add skill")
+	git(t, upstream, "branch", "-M", "main")
+	git(t, root, "init", "--bare", origin)
+	git(t, upstream, "remote", "add", "origin", origin)
+	git(t, upstream, "push", "-u", "origin", "main")
+	if err := os.MkdirAll(paths.ReposDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	git(t, root, "clone", "--branch", "main", origin, checkout)
+
+	db, err := database.Open(filepath.Join(root, "skillctl.db"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+
+	view, skills, err := New(db, paths).Add(context.Background(), "demo", origin, "main")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if view.CheckoutPath != checkout {
+		t.Fatalf("checkout path = %q, want %q", view.CheckoutPath, checkout)
+	}
+	if len(skills) != 1 || skills[0].ID != "demo::skills/example" {
+		t.Fatalf("skills = %#v", skills)
+	}
+	if _, err := db.GetSource("demo"); err != nil {
+		t.Fatalf("source was not registered: %v", err)
+	}
+}
+
+func TestViewTreatsSymlinkedCheckoutAsLocalSource(t *testing.T) {
+	if _, err := exec.LookPath("git"); err != nil {
+		t.Skip("git is not available")
+	}
+	root := t.TempDir()
+	repo := filepath.Join(root, "development-repo")
+	checkout := filepath.Join(root, "repos", "demo")
+	git(t, root, "init", repo)
+	configureGitUser(t, repo)
+	if err := os.WriteFile(filepath.Join(repo, "README.md"), []byte("local\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	git(t, repo, "add", "README.md")
+	git(t, repo, "commit", "-m", "initial")
+	git(t, repo, "branch", "-M", "self")
+	git(t, repo, "remote", "add", "origin", "git@github.com:acme/demo.git")
+	if err := os.MkdirAll(filepath.Dir(checkout), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Symlink(repo, checkout); err != nil {
+		t.Fatal(err)
+	}
+
+	db, err := database.Open(filepath.Join(root, "skillctl.db"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	src := model.Source{ID: "demo", URL: "git@github.com:acme/demo.git", Branch: "main", CheckoutPath: checkout, RemoteSHA: "stale", CreatedAt: database.Now()}
+	if err := db.InsertSource(src); err != nil {
+		t.Fatal(err)
+	}
+
+	view, err := New(db, model.Paths{}).View(context.Background(), src)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !view.LocalSource {
+		t.Fatal("expected local source")
+	}
+	wantPath, err := filepath.EvalSymlinks(repo)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if view.LocalPath != wantPath {
+		t.Fatalf("local path = %q, want %q", view.LocalPath, wantPath)
+	}
+	if view.LocalBranch != "self" {
+		t.Fatalf("local branch = %q, want self", view.LocalBranch)
+	}
+	if view.LocalSHA == "" {
+		t.Fatal("expected local commit SHA")
+	}
+	if view.RemoteSHA != "" || len(view.Remotes) != 0 {
+		t.Fatalf("expected no remote metadata, got remote_sha=%q remotes=%#v", view.RemoteSHA, view.Remotes)
+	}
+	if view.Status != "Local source" {
+		t.Fatalf("status = %q, want Local source", view.Status)
+	}
+}
+
 func TestRemoveDeletesManagedLinksAndRecordsButKeepsCheckout(t *testing.T) {
 	root := t.TempDir()
 	paths := model.Paths{

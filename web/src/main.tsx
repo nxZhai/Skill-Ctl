@@ -273,6 +273,7 @@ const messages = {
     statusSyncFailed: "Sync failed",
     statusUpdateAvailable: "Update available",
     statusUpToDate: "Up to date",
+    rescanIndex: "Rescan index",
     sync: "Sync",
     syncAll: "Sync all",
     switchTheme: "Switch theme",
@@ -466,6 +467,7 @@ const messages = {
     statusSyncFailed: "同步失败",
     statusUpdateAvailable: "可更新",
     statusUpToDate: "已最新",
+    rescanIndex: "刷新索引",
     sync: "同步",
     syncAll: "全部同步",
     switchTheme: "切换主题",
@@ -3600,7 +3602,14 @@ function SourcesPage({
                   <SourceNote source={source} run={run} busyLabel={busyLabel} t={t} />
                 </div>
                 <div className="sourceActions">
-                  {!source.local_source && <div className="actions sourceActionButtons">
+                  {source.local_source ? (
+                    <div className="actions sourceActionButtons">
+                      <button className="primary" disabled={bulkRunning || busyLabel === `Rescan ${source.id}`} onClick={(e) => { e.stopPropagation(); run(`Rescan ${source.id}`, () => api(`/api/sources/${encodeURIComponent(source.id)}/sync`, { method: "POST" })); }}>
+                        {busyLabel === `Rescan ${source.id}` && <Spinner />}
+                        <IconButtonContent icon="sync">{t("rescanIndex")}</IconButtonContent>
+                      </button>
+                    </div>
+                  ) : <div className="actions sourceActionButtons">
                     <button disabled={bulkRunning || busyLabel === `Check ${source.id}`} onClick={(e) => { e.stopPropagation(); run(`Check ${source.id}`, () => api(`/api/sources/${encodeURIComponent(source.id)}/check`, { method: "POST" })); }}>
                       {busyLabel === `Check ${source.id}` && <Spinner />}
                       <IconButtonContent icon="check">{t("check")}</IconButtonContent>

@@ -5,7 +5,7 @@
 <h1 align="center">⚡ Skillctl</h1>
 
 <p align="center">
-  <strong>A local macOS Web UI for managing Agent Skills from Git repositories.</strong>
+  <strong>A local-first macOS app and CLI for managing Agent Skills from Git repositories and local folders.</strong>
 </p>
 
 <p align="center">
@@ -16,6 +16,7 @@
 
 <p align="center">
   <a href="https://github.com/nxZhai/Skill-Ctl/releases"><img alt="Release" src="https://img.shields.io/github/v/release/nxZhai/Skill-Ctl?style=flat-square&color=2F6F68"></a>
+  <a href="https://github.com/nxZhai/Skill-Ctl/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/nxZhai/Skill-Ctl/ci.yml?branch=main&style=flat-square&label=CI"></a>
   <img alt="Platform" src="https://img.shields.io/badge/platform-macOS-5B6575?style=flat-square">
   <img alt="Go" src="https://img.shields.io/badge/Go-1.25-00ADD8?style=flat-square&logo=go&logoColor=white">
   <img alt="React" src="https://img.shields.io/badge/React%20%2B%20Vite-19%20%2F%208-646CFF?style=flat-square&logo=react&logoColor=white">
@@ -24,7 +25,7 @@
 
 ## ✨ Features
 
-- **Git source management**: add GitHub or Git-compatible repositories as skill sources, then sync them locally.
+- **Source management**: add GitHub, Git-compatible, or local sources, then sync or rescan them as appropriate.
 - **Recursive skill discovery**: scan repositories for `SKILL.md` files and track each skill's source, path, description, tags, and activation state.
 - **Local skill inventory**: inspect existing Claude Code or Codex skill folders so Skillctl reflects what agents can already see.
 - **Search and filters**: filter skills by keyword, source, tag, agent, and enabled state.
@@ -62,6 +63,8 @@ skillctl version
 `skillctl ui` initializes local config/data directories, starts an HTTP server on `127.0.0.1` with a random token, and opens the browser.
 
 `skillctl headless` starts the same token-protected API without serving the embedded frontend or opening a browser. It prints an API URL and blocks until interrupted, making it suitable for CLI and automation workflows.
+
+For an interactive session, start with `skillctl ui`. For scripts or API clients, use `skillctl headless`; both modes keep the server on `127.0.0.1` and print the token-protected endpoint at startup.
 
 ## 📦 Install
 
@@ -143,7 +146,7 @@ Create macOS `arm64` and `amd64` release archives under `dist/`:
 Set `VERSION` to override the version used in archive names:
 
 ```bash
-VERSION=0.6.0 ./scripts/package-macos.sh
+VERSION=0.6.1 ./scripts/package-macos.sh
 ```
 
 ## 🛠️ Development

@@ -51,6 +51,7 @@ Skillctl 会把 source 仓库和启用目标分开管理。仓库克隆到本地
 
 ```bash
 skillctl ui
+skillctl headless
 skillctl doctor
 skillctl rescan [source-id]
 skillctl update [--check]
@@ -59,6 +60,8 @@ skillctl version
 ```
 
 `skillctl ui` 会初始化本地配置和数据目录，监听 `127.0.0.1` 的随机端口，生成随机 token，并自动打开浏览器。
+
+`skillctl headless` 会启动同一套 token 保护的 API，但不会提供内嵌前端，也不会打开浏览器。它会打印 API 地址并持续运行到收到中断信号，适合命令行和自动化流程。
 
 ## 📦 安装
 
@@ -140,7 +143,7 @@ skillctl uninstall
 如需覆盖压缩包文件名中的版本号，传入 `VERSION`：
 
 ```bash
-VERSION=0.5.0 ./scripts/package-macos.sh
+VERSION=0.6.0 ./scripts/package-macos.sh
 ```
 
 ## 🛠️ 开发
@@ -178,4 +181,4 @@ Git 仓库会克隆到 `~/.local/share/skillctl/repos/`；统一的 skill 入口
 
 Skillctl 只创建软链接，不覆盖普通文件或不属于 Skillctl 的软链接。关闭 skill 时，只删除 SQLite 中记录的 activation 链接，不删除真实 skill 文件。若 source 存在本地修改，同步会停止；Git 更新只使用 fast-forward 方式，绝不重置 source checkout。
 
-Git 同步只使用 `fetch --prune` 和 `merge --ff-only`，不会执行 `git reset --hard`。本地 Web UI 只监听 `127.0.0.1`，所有 API 请求都必须携带启动时生成的随机 token。
+Git 同步只使用 `fetch --prune` 和 `merge --ff-only`，不会执行 `git reset --hard`。本地 Web UI 和 headless API 都只监听 `127.0.0.1`，所有 API 请求都必须携带启动时生成的随机 token。

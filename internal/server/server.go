@@ -58,13 +58,23 @@ func New(db *database.DB, paths model.Paths, cfg model.Config, token string) *Se
 }
 
 func (s *Server) ListenAndServe(ctx context.Context) (string, error) {
+	return s.listenAndServe(ctx, s.routes(), "/?token=")
+}
+
+// ListenAndServeHeadless starts the token-protected API without serving the
+// embedded frontend. It is intended for CLI and automation workflows.
+func (s *Server) ListenAndServeHeadless(ctx context.Context) (string, error) {
+	return s.listenAndServe(ctx, s.apiRoutes(), "/api?token=")
+}
+
+func (s *Server) listenAndServe(ctx context.Context, handler http.Handler, urlSuffix string) (string, error) {
 	listener, err := net.Listen("tcp", "127.0.0.1:0")
 	if err != nil {
 		return "", err
 	}
-	url := "http://" + listener.Addr().String() + "/?token=" + s.Token
+	url := "http://" + listener.Addr().String() + urlSuffix + s.Token
 	httpServer := &http.Server{
-		Handler:           s.routes(),
+		Handler:           handler,
 		ReadHeaderTimeout: 5 * time.Second,
 	}
 	go func() {
@@ -80,9 +90,14 @@ func (s *Server) ListenAndServe(ctx context.Context) (string, error) {
 }
 
 func (s *Server) routes() http.Handler {
+	mux := s.apiRoutes()
+	mux.HandleFunc("/", s.handleStatic)
+	return mux
+}
+
+func (s *Server) apiRoutes() *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/", s.withToken(s.handleAPI))
-	mux.HandleFunc("/", s.handleStatic)
 	return mux
 }
 

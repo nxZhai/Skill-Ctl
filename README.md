@@ -51,6 +51,7 @@ Skillctl keeps source repositories separate from activation targets. Repositorie
 
 ```bash
 skillctl ui
+skillctl headless
 skillctl doctor
 skillctl rescan [source-id]
 skillctl update [--check]
@@ -59,6 +60,8 @@ skillctl version
 ```
 
 `skillctl ui` initializes local config/data directories, starts an HTTP server on `127.0.0.1` with a random token, and opens the browser.
+
+`skillctl headless` starts the same token-protected API without serving the embedded frontend or opening a browser. It prints an API URL and blocks until interrupted, making it suitable for CLI and automation workflows.
 
 ## 📦 Install
 
@@ -140,7 +143,7 @@ Create macOS `arm64` and `amd64` release archives under `dist/`:
 Set `VERSION` to override the version used in archive names:
 
 ```bash
-VERSION=0.5.0 ./scripts/package-macos.sh
+VERSION=0.6.0 ./scripts/package-macos.sh
 ```
 
 ## 🛠️ Development
@@ -178,4 +181,4 @@ Git repositories are cloned under `~/.local/share/skillctl/repos/`; unified skil
 
 Skillctl only creates symlinks, refuses to overwrite ordinary files or foreign symlinks, and deletes only activation links recorded in SQLite. A source sync stops when that source has local changes; it uses fast-forward-only Git updates and never resets a source checkout.
 
-Git synchronization uses `fetch --prune` and `merge --ff-only`; it does not run `git reset --hard`. The local UI listens only on `127.0.0.1`, and all API requests must include the random token generated at startup.
+Git synchronization uses `fetch --prune` and `merge --ff-only`; it does not run `git reset --hard`. The local UI and headless API listen only on `127.0.0.1`, and all API requests must include the random token generated at startup.

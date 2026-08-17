@@ -20,7 +20,7 @@ go build -trimpath -ldflags="-s -w" -o "$BIN_DIR/skillctl" ./cmd/skillctl
 
 echo "installed: $BIN_DIR/skillctl"
 "$BIN_DIR/skillctl" version
-echo "run: skillctl ui"
+echo "run: skillctl ui (or skillctl headless)"
 
 resolved="$(command -v skillctl || true)"
 if [ -z "$resolved" ]; then

@@ -24,7 +24,7 @@ import (
 	"skillctl/internal/sources"
 )
 
-const version = "0.5.0"
+const version = "0.6.0"
 
 func main() {
 	cmd := "ui"
@@ -34,6 +34,11 @@ func main() {
 	switch cmd {
 	case "ui":
 		if err := runUI(); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+	case "headless":
+		if err := runHeadless(); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
@@ -64,7 +69,7 @@ func main() {
 	case "version", "--version", "-v":
 		fmt.Println("skillctl", version)
 	default:
-		fmt.Fprintf(os.Stderr, "unknown command %q\n\nUsage:\n  skillctl ui\n  skillctl doctor\n  skillctl rescan [source-id]\n  skillctl update [--check]\n  skillctl uninstall\n  skillctl version\n", cmd)
+		fmt.Fprintf(os.Stderr, "unknown command %q\n\nUsage:\n  skillctl ui\n  skillctl headless\n  skillctl doctor\n  skillctl rescan [source-id]\n  skillctl update [--check]\n  skillctl uninstall\n  skillctl version\n", cmd)
 		os.Exit(2)
 	}
 }
@@ -95,6 +100,34 @@ func runUI() error {
 	fmt.Println("Skillctl UI:", url)
 	notifyUpdateAvailable()
 	_ = exec.Command("open", url).Start()
+	<-ctx.Done()
+	return nil
+}
+
+func runHeadless() error {
+	paths, cfg, err := config.Init()
+	if err != nil {
+		return err
+	}
+	db, err := database.Open(paths.DBPath)
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
+	token, err := randomToken()
+	if err != nil {
+		return err
+	}
+	srv := server.New(db, paths, cfg, token)
+	url, err := srv.ListenAndServeHeadless(ctx)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Skillctl headless API:", url)
 	<-ctx.Done()
 	return nil
 }

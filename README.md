@@ -17,23 +17,23 @@
   <img alt="Local first" src="https://img.shields.io/badge/local--first-SQLite-41B3A3?style=flat-square">
 </p>
 
-Skillctl is a local-first macOS app and CLI for managing Agent Skills from Git repositories and local folders. It keeps sources, the searchable skill inventory, and agent activation targets separate so you can inspect and change your setup with confidence.
+Skillctl is a local-first macOS app and CLI for managing Agent Skills from Git repositories and local folders. It separates sources, the searchable skill inventory, and agent activation targets.
 
-## How it works
+## 🧭 How it works
 
 <p align="center">
   <img src="./assets/readme/workflow.svg" width="100%" alt="Skillctl workflow: add a source, discover SKILL.md files, index them in SQLite, and enable skills through managed symlinks">
 </p>
 
-The model is deliberately small:
+Skillctl follows this model:
 
 ```text
 Git repo or local folder → discovered Skill → SQLite inventory → managed symlink
 ```
 
-## What it handles
+## 🧩 What it handles
 
-### Curate the library
+### 📚 Curate the library
 
 - Add GitHub, Git-compatible, or local sources, then sync or rescan them as appropriate.
 - Recursively discover `SKILL.md` files and track each skill's source, path, description, tags, and activation state.
@@ -41,20 +41,20 @@ Git repo or local folder → discovered Skill → SQLite inventory → managed s
 - Search and filter skills by keyword, source, tag, agent, and enabled state.
 - Add repository tags, skill tags, and personal notes to keep large libraries navigable.
 
-### Activate with control
+### 🔗 Activate with control
 
 - Select multiple skills to add or remove tags, or enable them in bulk.
 - Enable skills globally or into a project-local agent directory.
 - Deploy through managed symlinks instead of copying source files.
 - Generate and apply project-level `.skillctl.toml` manifests.
 
-### Keep it observable
+### 🔍 Keep it observable
 
 - Summarize observed skill usage from local Codex and agent history.
 - Run Doctor checks for Git, source checkouts, local changes, broken symlinks, and manifest references.
 - Run as a single Go binary with the Vite frontend embedded.
 
-## Install
+## 📦 Install
 
 ### From a GitHub Release
 
@@ -93,7 +93,7 @@ To install somewhere else, pass `PREFIX`:
 PREFIX=/usr/local ./scripts/install-local.sh
 ```
 
-## Common commands
+## 🧰 Common commands
 
 ```bash
 skillctl ui
@@ -107,9 +107,9 @@ skillctl version
 
 `skillctl ui` initializes local config/data directories, starts a token-protected HTTP server on `127.0.0.1`, and opens the browser.
 
-`skillctl headless` starts the same token-protected API without serving the embedded frontend or opening a browser. It prints an API URL and blocks until interrupted, making it suitable for CLI and automation workflows.
+For CLI and automation workflows, `skillctl headless` starts the token-protected API, prints an API URL, and blocks until interrupted.
 
-## Updating
+## 🔄 Updating
 
 Check whether a newer compatible GitHub Release is available:
 
@@ -123,7 +123,7 @@ Download and install the latest compatible Release:
 skillctl update
 ```
 
-Before replacing its own binary, Skillctl creates a compressed backup under `~/.cache/skillctl/backups/` containing its configuration, SQLite state, managed repositories, and unified skill links. It validates the Release asset's SHA-256 when GitHub provides one, then hashes the same user data before and after the update. If the data differs, the command fails and leaves the backup in place; it does not automatically restore data. Starting `skillctl ui` also makes a best-effort release check and prints a terminal notice when a newer version is available.
+Before replacing its own binary, Skillctl creates a compressed backup under `~/.cache/skillctl/backups/` containing its configuration, SQLite state, managed repositories, and unified skill links. It validates the Release asset's SHA-256 when GitHub provides one, then hashes the same user data before and after the update. When the hashes differ, the command fails and preserves the backup for recovery. Starting `skillctl ui` also launches a background release check and prints a terminal notice when a newer version is available.
 
 For a source checkout used in development, update the checkout and reinstall it with:
 
@@ -131,7 +131,7 @@ For a source checkout used in development, update the checkout and reinstall it 
 ./scripts/update-local.sh
 ```
 
-## Uninstall
+## 🗑️ Uninstall
 
 ```bash
 skillctl uninstall
@@ -139,7 +139,7 @@ skillctl uninstall
 
 Uninstall first removes every Skillctl-recorded agent skill symlink, with the same target validation used by the UI. It then asks whether to delete Skillctl-managed local skill repositories and finally removes the running `skillctl` binary. Choosing no keeps the repositories, configuration, SQLite state, and cache for a future reinstall. If a managed link cannot be validated or removed safely, uninstall stops without deleting the binary.
 
-## Packaging
+## 🗜️ Packaging
 
 Create macOS `arm64` and `amd64` release archives under `dist/`:
 
@@ -153,7 +153,7 @@ Set `VERSION` to override the version used in archive names:
 VERSION=0.6.1 ./scripts/package-macos.sh
 ```
 
-## Development
+## 🛠️ Development
 
 Build the frontend first so Go can embed `web/dist`:
 
@@ -172,7 +172,7 @@ go test ./...
 npm --prefix web run build
 ```
 
-## Local data
+## 🗂️ Local data
 
 By default, Skillctl uses:
 
@@ -184,7 +184,7 @@ By default, Skillctl uses:
 
 Git repositories are cloned under `~/.local/share/skillctl/repos/`; unified skill symlink entries are created under `~/.local/share/skillctl/skills/`. Both storage directories can be changed in Settings. The initial agent targets are `~/.agents/skills` and `~/.claude/skills` for global activation, with `.agents/skills` and `.claude/skills` for project activation.
 
-## Safety
+## 🔒 Safety
 
 Skillctl only creates symlinks, refuses to overwrite ordinary files or foreign symlinks, and deletes only activation links recorded in SQLite. A source sync stops when that source has local changes; it uses fast-forward-only Git updates and never resets a source checkout.
 

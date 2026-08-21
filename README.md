@@ -1,11 +1,5 @@
 <p align="center">
-  <img src="assets/skillctl-logo.svg" width="420" alt="Skillctl logo">
-</p>
-
-<h1 align="center">⚡ Skillctl</h1>
-
-<p align="center">
-  <strong>A local-first macOS app and CLI for managing Agent Skills from Git repositories and local folders.</strong>
+  <img src="./assets/readme/hero.svg" width="100%" alt="Skillctl, a local-first macOS manager for Agent Skills">
 </p>
 
 <p align="center">
@@ -23,50 +17,44 @@
   <img alt="Local first" src="https://img.shields.io/badge/local--first-SQLite-41B3A3?style=flat-square">
 </p>
 
-## ✨ Features
+Skillctl is a local-first macOS app and CLI for managing Agent Skills from Git repositories and local folders. It keeps sources, the searchable skill inventory, and agent activation targets separate so you can inspect and change your setup with confidence.
 
-- **Source management**: add GitHub, Git-compatible, or local sources, then sync or rescan them as appropriate.
-- **Recursive skill discovery**: scan repositories for `SKILL.md` files and track each skill's source, path, description, tags, and activation state.
-- **Local skill inventory**: inspect existing Claude Code or Codex skill folders so Skillctl reflects what agents can already see.
-- **Search and filters**: filter skills by keyword, source, tag, agent, and enabled state.
-- **Tags and notes**: add repository/skill tags and personal notes to keep large skill libraries navigable.
-- **Batch operations**: select multiple skills to add/remove tags or enable them in bulk.
-- **Global and project activation**: enable skills globally or into a project-local agent directory.
-- **Symlink deployment**: deploy skills through managed symlinks instead of copying source files.
-- **Project manifests**: generate and apply project-level `.skillctl.toml` manifests.
-- **Usage ranking**: summarize observed skill usage from local Codex/agent history.
-- **Doctor checks**: inspect Git availability, source checkouts, local changes, broken symlinks, and manifest references.
-- **Single-binary local app**: run a local token-protected HTTP server with the Vite frontend embedded in the Go binary.
+## How it works
 
-## 🧭 Core Concepts
+<p align="center">
+  <img src="./assets/readme/workflow.svg" width="100%" alt="Skillctl workflow: add a source, discover SKILL.md files, index them in SQLite, and enable skills through managed symlinks">
+</p>
+
+The model is deliberately small:
 
 ```text
-Git repo is the sync/update unit
-Skill is the browse/filter/enable unit
-Symlink is the deployment mechanism
+Git repo or local folder → discovered Skill → SQLite inventory → managed symlink
 ```
 
-Skillctl keeps source repositories separate from activation targets. Repositories are cloned under local data storage, discovered skills are indexed in SQLite, and enabled skills are exposed to agents through controlled symlinks.
+## What it handles
 
-## 🚀 Commands
+### Curate the library
 
-```bash
-skillctl ui
-skillctl headless
-skillctl doctor
-skillctl rescan [source-id]
-skillctl update [--check]
-skillctl uninstall
-skillctl version
-```
+- Add GitHub, Git-compatible, or local sources, then sync or rescan them as appropriate.
+- Recursively discover `SKILL.md` files and track each skill's source, path, description, tags, and activation state.
+- Inspect existing Claude Code or Codex skill folders so Skillctl reflects what agents can already see.
+- Search and filter skills by keyword, source, tag, agent, and enabled state.
+- Add repository tags, skill tags, and personal notes to keep large libraries navigable.
 
-`skillctl ui` initializes local config/data directories, starts an HTTP server on `127.0.0.1` with a random token, and opens the browser.
+### Activate with control
 
-`skillctl headless` starts the same token-protected API without serving the embedded frontend or opening a browser. It prints an API URL and blocks until interrupted, making it suitable for CLI and automation workflows.
+- Select multiple skills to add or remove tags, or enable them in bulk.
+- Enable skills globally or into a project-local agent directory.
+- Deploy through managed symlinks instead of copying source files.
+- Generate and apply project-level `.skillctl.toml` manifests.
 
-For an interactive session, start with `skillctl ui`. For scripts or API clients, use `skillctl headless`; both modes keep the server on `127.0.0.1` and print the token-protected endpoint at startup.
+### Keep it observable
 
-## 📦 Install
+- Summarize observed skill usage from local Codex and agent history.
+- Run Doctor checks for Git, source checkouts, local changes, broken symlinks, and manifest references.
+- Run as a single Go binary with the Vite frontend embedded.
+
+## Install
 
 ### From a GitHub Release
 
@@ -78,7 +66,7 @@ mkdir -p ~/.local/bin
 install -m 755 skillctl_<version>_darwin_arm64/skillctl ~/.local/bin/skillctl
 ```
 
-If `~/.local/bin` is not already in your shell `PATH`, add this to `~/.zshrc`:
+If `~/.local/bin` is not already in your shell `PATH`, add this to your `~/.zshrc`:
 
 ```bash
 export PATH="$HOME/.local/bin:$PATH"
@@ -105,7 +93,23 @@ To install somewhere else, pass `PREFIX`:
 PREFIX=/usr/local ./scripts/install-local.sh
 ```
 
-## 🔄 Updating
+## Common commands
+
+```bash
+skillctl ui
+skillctl headless
+skillctl doctor
+skillctl rescan [source-id]
+skillctl update [--check]
+skillctl uninstall
+skillctl version
+```
+
+`skillctl ui` initializes local config/data directories, starts a token-protected HTTP server on `127.0.0.1`, and opens the browser.
+
+`skillctl headless` starts the same token-protected API without serving the embedded frontend or opening a browser. It prints an API URL and blocks until interrupted, making it suitable for CLI and automation workflows.
+
+## Updating
 
 Check whether a newer compatible GitHub Release is available:
 
@@ -127,7 +131,7 @@ For a source checkout used in development, update the checkout and reinstall it 
 ./scripts/update-local.sh
 ```
 
-## 🗑️ Uninstall
+## Uninstall
 
 ```bash
 skillctl uninstall
@@ -135,7 +139,7 @@ skillctl uninstall
 
 Uninstall first removes every Skillctl-recorded agent skill symlink, with the same target validation used by the UI. It then asks whether to delete Skillctl-managed local skill repositories and finally removes the running `skillctl` binary. Choosing no keeps the repositories, configuration, SQLite state, and cache for a future reinstall. If a managed link cannot be validated or removed safely, uninstall stops without deleting the binary.
 
-## 🗜️ Packaging
+## Packaging
 
 Create macOS `arm64` and `amd64` release archives under `dist/`:
 
@@ -149,7 +153,7 @@ Set `VERSION` to override the version used in archive names:
 VERSION=0.6.1 ./scripts/package-macos.sh
 ```
 
-## 🛠️ Development
+## Development
 
 Build the frontend first so Go can embed `web/dist`:
 
@@ -168,7 +172,7 @@ go test ./...
 npm --prefix web run build
 ```
 
-## 🗂️ Local Data
+## Local data
 
 By default, Skillctl uses:
 
@@ -180,7 +184,7 @@ By default, Skillctl uses:
 
 Git repositories are cloned under `~/.local/share/skillctl/repos/`; unified skill symlink entries are created under `~/.local/share/skillctl/skills/`. Both storage directories can be changed in Settings. The initial agent targets are `~/.agents/skills` and `~/.claude/skills` for global activation, with `.agents/skills` and `.claude/skills` for project activation.
 
-## 🔒 Safety
+## Safety
 
 Skillctl only creates symlinks, refuses to overwrite ordinary files or foreign symlinks, and deletes only activation links recorded in SQLite. A source sync stops when that source has local changes; it uses fast-forward-only Git updates and never resets a source checkout.
 

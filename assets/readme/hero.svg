@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="420" viewBox="0 0 1200 420"
+     role="img" aria-labelledby="title desc">
+  <title id="title">Skillctl — local-first Agent Skills manager</title>
+  <desc id="desc">A local macOS app and CLI that turns Git repositories and local folders into a searchable skill inventory and managed agent symlinks.</desc>
+
+  <defs>
+    <clipPath id="heroClip">
+      <rect x="0" y="0" width="1200" height="420" rx="28"/>
+    </clipPath>
+  </defs>
+
+  <rect width="1200" height="420" rx="28" fill="#FAF8F4" stroke="#E1D9CA" stroke-width="2"/>
+
+  <g clip-path="url(#heroClip)" opacity="0.48" stroke="#E1D9CA" stroke-width="1">
+    <path d="M0 72H650M0 348H650M78 0V420M590 0V420"/>
+    <path d="M0 208H650" stroke-dasharray="5 12"/>
+  </g>
+
+  <g transform="translate(64 52)">
+    <rect width="48" height="48" rx="14" fill="#17191F"/>
+    <path d="M15 18L26 24L15 30" fill="none" stroke="#F2C94C" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M31 31H36" stroke="#41B3A3" stroke-width="4" stroke-linecap="round"/>
+
+    <text x="68" y="18" fill="#667085" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" font-weight="700" letter-spacing="2">LOCAL-FIRST / AGENT SKILLS</text>
+    <text x="68" y="92" fill="#17191F" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="76" font-weight="800" letter-spacing="-3">Skillctl</text>
+    <text x="70" y="142" fill="#324A5F" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="31" font-weight="600">Manage, inspect, and activate</text>
+    <text x="70" y="180" fill="#324A5F" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="31" font-weight="600">agent skills from one local console.</text>
+
+    <g transform="translate(70 218)">
+      <rect width="108" height="38" rx="19" fill="#E8F4F1" stroke="#A6D9D0"/>
+      <text x="54" y="25" text-anchor="middle" fill="#236A61" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" font-weight="700">macOS</text>
+      <rect x="120" width="110" height="38" rx="19" fill="#F1EEE8" stroke="#D4CABA"/>
+      <text x="175" y="25" text-anchor="middle" fill="#5B6575" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" font-weight="700">Go + React</text>
+      <rect x="242" width="104" height="38" rx="19" fill="#FFF4CC" stroke="#F2D87B"/>
+      <text x="294" y="25" text-anchor="middle" fill="#7A5C00" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" font-weight="700">SQLite</text>
+    </g>
+
+    <text x="70" y="306" fill="#667085" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" font-weight="600" letter-spacing="1">&gt; skillctl ui</text>
+    <rect x="70" y="322" width="126" height="5" rx="2.5" fill="#41B3A3"/>
+    <rect x="202" y="322" width="42" height="5" rx="2.5" fill="#F2C94C"/>
+  </g>
+
+  <g transform="translate(664 52)">
+    <rect width="472" height="314" rx="20" fill="#FFFEFD" stroke="#D4CABA" stroke-width="2"/>
+    <path d="M0 58H472" stroke="#E1D9CA" stroke-width="2"/>
+    <circle cx="26" cy="29" r="6" fill="#F2C94C"/>
+    <circle cx="48" cy="29" r="6" fill="#41B3A3"/>
+    <circle cx="70" cy="29" r="6" fill="#324A5F"/>
+    <text x="101" y="36" fill="#667085" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" font-weight="700">SKILL PIPELINE</text>
+
+    <g transform="translate(22 88)">
+      <rect width="124" height="112" rx="14" fill="#F4FBF9" stroke="#A6D9D0"/>
+      <text x="16" y="27" fill="#236A61" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="16" font-weight="700">01 / SOURCE</text>
+      <text x="16" y="62" fill="#17191F" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="22" font-weight="750">Git + local</text>
+      <text x="16" y="88" fill="#667085" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18">repositories</text>
+    </g>
+
+    <g transform="translate(174 88)">
+      <rect width="124" height="112" rx="14" fill="#FFF9E8" stroke="#F2D87B"/>
+      <text x="16" y="27" fill="#7A5C00" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="16" font-weight="700">02 / INDEX</text>
+      <text x="16" y="62" fill="#17191F" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="21" font-weight="750">SKILL.md</text>
+      <text x="16" y="88" fill="#667085" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18">→ SQLite</text>
+    </g>
+
+    <g transform="translate(326 88)">
+      <rect width="124" height="112" rx="14" fill="#F2F4F7" stroke="#C8D0D8"/>
+      <text x="16" y="27" fill="#324A5F" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="16" font-weight="700">03 / TARGET</text>
+      <text x="16" y="62" fill="#17191F" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="21" font-weight="750">Agent dirs</text>
+      <text x="16" y="88" fill="#667085" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18">symlinks</text>
+    </g>
+
+    <path d="M146 144H164" stroke="#41B3A3" stroke-width="3" stroke-linecap="round"/>
+    <path d="M158 137L166 144L158 151" fill="none" stroke="#41B3A3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M298 144H316" stroke="#F2C94C" stroke-width="3" stroke-linecap="round"/>
+    <path d="M310 137L318 144L310 151" fill="none" stroke="#F2C94C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <path d="M22 238H450" stroke="#E1D9CA" stroke-width="2" stroke-dasharray="4 8"/>
+    <text x="22" y="270" fill="#667085" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18">sync · rescan · enable · doctor</text>
+    <text x="450" y="270" text-anchor="end" fill="#236A61" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" font-weight="700">127.0.0.1</text>
+  </g>
+</svg>

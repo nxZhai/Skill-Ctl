@@ -234,6 +234,28 @@ func (m *Manager) CleanupDanglingManagedLinks() ([]string, error) {
 	return dangling, nil
 }
 
+func (m *Manager) CleanupMissingProjectActivations() ([]model.Activation, error) {
+	activations, err := m.DB.ListActivations()
+	if err != nil {
+		return nil, err
+	}
+	var removed []model.Activation
+	for _, activation := range activations {
+		if activation.Scope != "project" || strings.TrimSpace(activation.ProjectRoot) == "" {
+			continue
+		}
+		if _, err := os.Stat(activation.ProjectRoot); errors.Is(err, os.ErrNotExist) {
+			if err := m.DB.DeleteActivationRecord(activation.ID); err != nil {
+				return nil, err
+			}
+			removed = append(removed, activation)
+		} else if err != nil {
+			return nil, err
+		}
+	}
+	return removed, nil
+}
+
 func (m *Manager) globalLinkRoots() ([]string, error) {
 	seen := map[string]bool{}
 	var roots []string

@@ -60,3 +60,63 @@ func TestCleanupDanglingManagedLinks(t *testing.T) {
 		t.Fatalf("live link should remain: %v", err)
 	}
 }
+
+func TestCleanupMissingProjectActivations(t *testing.T) {
+	root := t.TempDir()
+	db, err := database.Open(filepath.Join(root, "state.sqlite"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+
+	source := model.Source{ID: "demo", URL: "local", Branch: "main", CheckoutPath: filepath.Join(root, "repo"), CreatedAt: database.Now()}
+	if err := db.InsertSource(source); err != nil {
+		t.Fatal(err)
+	}
+	skill := model.Skill{ID: "demo::skills/example", SourceID: source.ID, RelativePath: "skills/example", Name: "Example", DiscoveredAt: database.Now()}
+	if err := db.ReplaceSkillsForSource(source.ID, []model.Skill{skill}); err != nil {
+		t.Fatal(err)
+	}
+	missingRoot := filepath.Join(root, "deleted-project")
+	existingRoot := filepath.Join(root, "existing-project")
+	if err := os.MkdirAll(existingRoot, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	missingID, err := db.InsertActivation(model.Activation{
+		SkillID:     skill.ID,
+		Agent:       "codex",
+		Scope:       "project",
+		ProjectRoot: missingRoot,
+		LinkPath:    filepath.Join(missingRoot, ".agents", "skills", "example"),
+		CreatedAt:   database.Now(),
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	existingID, err := db.InsertActivation(model.Activation{
+		SkillID:     skill.ID,
+		Agent:       "codex",
+		Scope:       "project",
+		ProjectRoot: existingRoot,
+		LinkPath:    filepath.Join(existingRoot, ".agents", "skills", "example"),
+		CreatedAt:   database.Now(),
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	manager := New(db, model.Paths{}, model.Config{})
+	removed, err := manager.CleanupMissingProjectActivations()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(removed) != 1 || removed[0].ID != missingID {
+		t.Fatalf("removed = %#v, want activation %d", removed, missingID)
+	}
+	if _, err := db.GetActivation(missingID); !database.IsNotFound(err) {
+		t.Fatalf("missing project activation remains: %v", err)
+	}
+	if _, err := db.GetActivation(existingID); err != nil {
+		t.Fatalf("existing project activation was removed: %v", err)
+	}
+}

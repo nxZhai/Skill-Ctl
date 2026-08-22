@@ -24,7 +24,7 @@ import (
 	"skillctl/internal/sources"
 )
 
-const version = "0.6.2"
+const version = "0.6.3"
 
 func main() {
 	cmd := "ui"
@@ -312,6 +312,13 @@ func runRescan(only string) error {
 	}
 	if len(removed) > 0 {
 		fmt.Printf("removed %d dangling activation link(s)\n", len(removed))
+	}
+	projectRemoved, err := managed.CleanupMissingProjectActivations()
+	if err != nil {
+		return fmt.Errorf("cleanup missing project activations: %w", err)
+	}
+	if len(projectRemoved) > 0 {
+		fmt.Printf("removed %d activation record(s) for missing project root(s)\n", len(projectRemoved))
 	}
 	return nil
 }

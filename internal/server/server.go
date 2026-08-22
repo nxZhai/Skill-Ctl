@@ -52,7 +52,7 @@ func New(db *database.DB, paths model.Paths, cfg model.Config, token string) *Se
 		LocalSkills: localskills.New(cfg),
 		Activations: activations,
 		Projects:    project.New(db, activations),
-		Doctor:      doctor.New(db, paths),
+		Doctor:      doctor.New(db, paths, cfg),
 		Usage:       usage.New(),
 	}
 }
@@ -174,6 +174,7 @@ func (s *Server) handleAPI(w http.ResponseWriter, r *http.Request) {
 		s.Activations.Paths = newPaths
 		s.Activations.Config = newCfg
 		s.Doctor.Paths = newPaths
+		s.Doctor.Config = newCfg
 		writeJSON(w, http.StatusOK, map[string]any{
 			"agents":     newCfg.Agents,
 			"projects":   newCfg.Projects,

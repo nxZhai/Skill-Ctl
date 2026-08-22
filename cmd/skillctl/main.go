@@ -24,7 +24,7 @@ import (
 	"skillctl/internal/sources"
 )
 
-const version = "0.6.0"
+const version = "0.6.2"
 
 func main() {
 	cmd := "ui"
@@ -240,7 +240,6 @@ func runUninstall() error {
 
 func runDoctor() error {
 	paths, cfg, err := config.Init()
-	_ = cfg
 	if err != nil {
 		return err
 	}
@@ -249,7 +248,7 @@ func runDoctor() error {
 		return err
 	}
 	defer db.Close()
-	checks := doctor.New(db, paths).Run(context.Background(), "")
+	checks := doctor.New(db, paths, cfg).Run(context.Background(), "")
 	failed := false
 	for _, check := range checks {
 		state := "ok"
@@ -276,7 +275,7 @@ func runDoctor() error {
 // Stale skills (e.g. previously discovered under plugins/) are removed via
 // ReplaceSkillsForSource, and their unified symlinks are pruned by the scanner.
 func runRescan(only string) error {
-	paths, _, err := config.Init()
+	paths, cfg, err := config.Init()
 	if err != nil {
 		return err
 	}
@@ -305,6 +304,14 @@ func runRescan(only string) error {
 	}
 	if only != "" && !matched {
 		return fmt.Errorf("source %q not found", only)
+	}
+	managed := activation.New(db, paths, cfg)
+	removed, err := managed.CleanupDanglingManagedLinks()
+	if err != nil {
+		return fmt.Errorf("cleanup dangling activation links: %w", err)
+	}
+	if len(removed) > 0 {
+		fmt.Printf("removed %d dangling activation link(s)\n", len(removed))
 	}
 	return nil
 }

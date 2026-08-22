@@ -9,6 +9,7 @@ import (
 
 	"github.com/pelletier/go-toml/v2"
 
+	"skillctl/internal/activation"
 	"skillctl/internal/database"
 	"skillctl/internal/model"
 	"skillctl/internal/project"
@@ -23,12 +24,13 @@ type Check struct {
 }
 
 type Doctor struct {
-	DB    *database.DB
-	Paths model.Paths
+	DB     *database.DB
+	Paths  model.Paths
+	Config model.Config
 }
 
-func New(db *database.DB, paths model.Paths) *Doctor {
-	return &Doctor{DB: db, Paths: paths}
+func New(db *database.DB, paths model.Paths, cfg model.Config) *Doctor {
+	return &Doctor{DB: db, Paths: paths, Config: cfg}
 }
 
 func (d *Doctor) Run(ctx context.Context, projectPath string) []Check {
@@ -76,6 +78,15 @@ func (d *Doctor) Run(ctx context.Context, projectPath string) []Check {
 				checks = append(checks, Check{Name: "activation link", OK: false, Path: a.LinkPath, Message: err.Error()})
 			} else {
 				checks = append(checks, Check{Name: "activation link", OK: true, Path: a.LinkPath})
+			}
+		}
+		managed := activation.New(d.DB, d.Paths, d.Config)
+		dangling, err := managed.DanglingManagedLinks()
+		if err != nil {
+			checks = append(checks, Check{Name: "activation scan", OK: false, Message: err.Error()})
+		} else {
+			for _, path := range dangling {
+				checks = append(checks, Check{Name: "activation link", OK: false, Path: path, Message: "unrecorded dangling Skillctl-managed link"})
 			}
 		}
 	}

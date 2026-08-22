@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strings"
 
 	"skillctl/internal/config"
@@ -160,6 +161,111 @@ func (m *Manager) DisableMany(activations []model.Activation) []model.OperationR
 		})
 	}
 	return results
+}
+
+// DanglingManagedLinks returns unrecorded global activation links whose target
+// is missing from Skillctl's managed skills directory.
+func (m *Manager) DanglingManagedLinks() ([]string, error) {
+	activations, err := m.DB.ListActivations()
+	if err != nil {
+		return nil, err
+	}
+	recorded := make(map[string]bool, len(activations))
+	for _, activation := range activations {
+		recorded[cleanPath(activation.LinkPath)] = true
+	}
+	managedRoot, err := filepath.Abs(m.Paths.SkillsDir)
+	if err != nil {
+		return nil, err
+	}
+	roots, err := m.globalLinkRoots()
+	if err != nil {
+		return nil, err
+	}
+	var dangling []string
+	for _, root := range roots {
+		entries, err := os.ReadDir(root)
+		if errors.Is(err, os.ErrNotExist) {
+			continue
+		}
+		if err != nil {
+			return nil, err
+		}
+		for _, entry := range entries {
+			if entry.Type()&os.ModeSymlink == 0 {
+				continue
+			}
+			linkPath := filepath.Join(root, entry.Name())
+			if recorded[cleanPath(linkPath)] {
+				continue
+			}
+			target, err := os.Readlink(linkPath)
+			if err != nil {
+				return nil, err
+			}
+			if !filepath.IsAbs(target) {
+				target = filepath.Join(filepath.Dir(linkPath), target)
+			}
+			target, err = filepath.Abs(target)
+			if err != nil || !pathWithin(managedRoot, target) {
+				continue
+			}
+			if _, err := os.Stat(target); errors.Is(err, os.ErrNotExist) {
+				dangling = append(dangling, linkPath)
+			} else if err != nil {
+				return nil, err
+			}
+		}
+	}
+	sort.Strings(dangling)
+	return dangling, nil
+}
+
+func (m *Manager) CleanupDanglingManagedLinks() ([]string, error) {
+	dangling, err := m.DanglingManagedLinks()
+	if err != nil {
+		return nil, err
+	}
+	for _, path := range dangling {
+		if err := os.Remove(path); err != nil {
+			return nil, err
+		}
+	}
+	return dangling, nil
+}
+
+func (m *Manager) globalLinkRoots() ([]string, error) {
+	seen := map[string]bool{}
+	var roots []string
+	for _, agent := range m.Config.Agents {
+		root, err := config.ExpandPath(agent.UserDir)
+		if err != nil {
+			return nil, err
+		}
+		if strings.TrimSpace(root) == "" {
+			continue
+		}
+		root = cleanPath(root)
+		if !seen[root] {
+			seen[root] = true
+			roots = append(roots, root)
+		}
+	}
+	sort.Strings(roots)
+	return roots, nil
+}
+
+func cleanPath(path string) string {
+	abs, err := filepath.Abs(path)
+	if err != nil {
+		return filepath.Clean(path)
+	}
+	return filepath.Clean(abs)
+}
+
+func pathWithin(root, target string) bool {
+	rel, err := filepath.Rel(root, target)
+	return err == nil && rel != "." && rel != ".." && !strings.HasPrefix(rel, ".."+string(os.PathSeparator))
 }
 
 func (m *Manager) linkDir(scope, projectRoot string, agentCfg model.AgentConfig) (string, string, error) {
